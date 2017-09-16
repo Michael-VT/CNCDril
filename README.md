@@ -4,26 +4,24 @@
 It contains the source files for the program for Delphi 6.0
 This is just a working example.
 ---
-
 Содержит исходные файлы программы для Делфи 6.0
 Это всего лишь работающий пример.
+---
 
 # Описание программы
 ---
 **Программа конвертирует файл сверловки .drl из P-CAD и Altium в G-Code CNC**
-The program converts the drill file .drl from P-CAD and Altium to G-Code CNC
 ---
-
+**The program converts the drill file .drl from P-CAD and Altium to G-Code CNC**
+---
 В программе есть возможность выбрать режим оптимизации перемещения сверла.
 Для компенсации выработки точности станка можно выбрать режим захода на
 сверловку с одной стороны по x и y.
 ---
-
 In the program it is possible to select the optimization mode for moving
 the drill. To compensate for the accuracy of the machine, you can select
 the drill entry mode from one side in x and y.
 ---
-
 **Chenge tools position X, Y - в эти координаты подводится шпиндель для смены сверла.
 / in these coordinates the spindle for changing the drill is fed.**
 
