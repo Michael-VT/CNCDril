@@ -24,11 +24,13 @@ the drill. To compensate for the accuracy of the machine, you can select
 the drill entry mode from one side in x and y.
 ---
 
-**Chenge tools position X, Y** - в эти координаты подводится шпиндель для смены сверла.
-/ in these coordinates the spindle for changing the drill is fed.
+**Chenge tools position X, Y - в эти координаты подводится шпиндель для смены сверла.
+/ in these coordinates the spindle for changing the drill is fed.**
 
 
 **Example for file** 
+---
+
 <img src="CNCDril_01.png" width="600" style="float:right"/>
 ---
 
