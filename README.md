@@ -28,7 +28,7 @@ the drill entry mode from one side in x and y.
 / in these coordinates the spindle for changing the drill is fed.
 
 
-Example for file 
+**Example for file** 
 <img src="CNCDril_01.png" width="600" style="float:right"/>
 ---
 
