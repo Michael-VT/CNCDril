@@ -1,18 +1,16 @@
 # CNCDril
-## Converting a DRL file to a T-code file with optimization
----
-It contains the source files for the program for Delphi 6.0
+Converting a DRL file to a T-code file with optimization
+
+This repo contain source files for Delphi 6.0
 This is just a working example.
----
+
 Содержит исходные файлы программы для Делфи 6.0
 Это всего лишь работающий пример.
----
 
-# Описание программы
----
+### Описание программы
 **Программа конвертирует файл сверловки .drl из P-CAD и Altium в G-Code CNC**
----
 **The program converts the drill file .drl from P-CAD and Altium to G-Code CNC**
+
 ---
 В программе есть возможность выбрать режим оптимизации перемещения сверла.
 Для компенсации выработки точности станка можно выбрать режим захода на
@@ -38,9 +36,9 @@ the drill entry mode from one side in x and y.
 <img src="CNCDril_03-Sort_by_Y.png" width="600" style="float:right"/>
 ---
 
-**Режим с оптимизацией маршрута по алгоритму Дейкстры.**
+**Режим с оптимизацией маршрута по алгоритму Optics.**
 ---
-**The mode with route optimization by the Dijkstra algorithm.**
+**The mode with route optimization by the Optics classification algorithm.**
 ---
 <img src="CNCDril_04-Sort_by_path.png" width="600" style="float:right"/>
 ---
