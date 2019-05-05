@@ -1,49 +1,41 @@
 # CNCDril
-Converting a DRL file to a T-code file with optimization
+Convertor of DRL (P-CAD, Altium) drill files to G-Code (CNC) with different optimization methods.
 
-This repo contain source files for Delphi 6.0
-This is just a working example.
+This repo contains source files for Delphi 6.0.
+> Содержит исходные файлы программы для Делфи 6.0.
 
-Содержит исходные файлы программы для Делфи 6.0
-Это всего лишь работающий пример.
+### Program Description / Описание программы
+**The program converts the drill files (.drl) from P-CAD or Altium to G-Code CNC**
+>**Программа конвертирует файл сверловки .drl из P-CAD или Altium в G-Code CNC**
 
-### Описание программы
-**Программа конвертирует файл сверловки .drl из P-CAD и Altium в G-Code CNC**
-**The program converts the drill file .drl from P-CAD and Altium to G-Code CNC**
+It is possible to select the optimization mode for drill movement. To compensate the accuracy of the machine, you can select the drill entry mode from one side in X and Y.
+>Есть возможность выбрать режим оптимизации перемещения сверла. Для компенсации выработки точности станка можно выбрать режим захода на сверловку с одной стороны по X и Y.
 
----
-В программе есть возможность выбрать режим оптимизации перемещения сверла.
-Для компенсации выработки точности станка можно выбрать режим захода на
-сверловку с одной стороны по x и y.
----
-In the program it is possible to select the optimization mode for moving
-the drill. To compensate for the accuracy of the machine, you can select
-the drill entry mode from one side in x and y.
----
-**Chenge tools position X, Y - в эти координаты подводится шпиндель для смены сверла.
-/ in these coordinates the spindle for changing the drill is fed.**
+#### Change tools position X, Y
+Coordinates, where spindle moved to, to change the drill, to fed
+> Координаты, куда подводится шпиндель для смены сверла
 
+Examples / Примеры:
 
-**Example for file** 
----
 
 <img src="CNCDril_01.png" width="600" style="float:right"/>
----
+
 
 <img src="CNCDril_02-Sort_by_X.png" width="600" style="float:right"/>
----
+
 
 <img src="CNCDril_03-Sort_by_Y.png" width="600" style="float:right"/>
----
 
-**Режим с оптимизацией маршрута по алгоритму Optics.**
----
-**The mode with route optimization by the Optics classification algorithm.**
----
+
+### Optimization
+The mode with route optimization by using Optics classification algorithm.
+> Режим с оптимизацией маршрута по алгоритму Optics:
+
+Example / Пример:
+
 <img src="CNCDril_04-Sort_by_path.png" width="600" style="float:right"/>
----
 
-**Окно исходного файла сверловки и результирующего кода для станка.**
+#### Окно исходного файла сверловки и результирующего кода для станка.
 ---
 **The window for the source file for drilling and the resulting code for the machine.**
 ---
