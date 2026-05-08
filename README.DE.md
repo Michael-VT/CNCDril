@@ -101,3 +101,25 @@ Die Standardsprache ist Englisch in allen Versionen.
 ## Lizenz
 
 MIT License - Siehe LICENSE-Datei für Details
+
+## Screenshots
+
+### Delphi-Anwendung
+
+|Screenshot|Beschreibung|
+|---|---|
+|![Hauptfenster](docs/screenshots/CNCDril_01.png)|Hauptfenster|
+|![Sortierung nach X](docs/screenshots/CNCDril_02-Sort_by_X.png)|Sortierung nach X|
+|![Sortierung nach Y](docs/screenshots/CNCDril_03-Sort_by_Y.png)|Sortierung nach Y|
+|![Pfad-Sortierung](docs/screenshots/CNCDril_04-Sort_by_path.png)|Pfad-Sortierung (OPTICS)|
+|![Quellcode](docs/screenshots/CNCDril_05-code-source.png)|Quellcode|
+|![Parameter](docs/screenshots/CNCDril_06-Set-tools-parametr.png)|Werkzeugparameter|
+|![Koordinaten](docs/screenshots/CNCDril_07-All-drilling-coordinat.png)|Alle Bohrkoordinaten|
+
+### Web-Anwendung v2.0
+
+|Screenshot|Beschreibung|
+|---|---|
+|![Web 1](docs/screenshots/CNCDril_08-All-drilling-by-web.png)|Web-Oberfläche - Hauptansicht|
+|![Web 2](docs/screenshots/CNCDril_09-All-drilling-by-web.png)|Web-Oberfläche - G-Code-Generierung|
+|![Web 3](docs/screenshots/CNCDril_10-All-drilling-by-web.png)|Web-Oberfläche - Visualisierung|

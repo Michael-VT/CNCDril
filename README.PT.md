@@ -101,3 +101,25 @@ O idioma padrão é inglês em todas as versões.
 ## Licença
 
 MIT License - Veja o arquivo LICENSE para detalhes
+
+## Capturas de Tela
+
+### Aplicativo Delphi
+
+|Captura|Descrição|
+|---|---|
+|![Janela Principal](docs/screenshots/CNCDril_01.png)|Janela Principal|
+|![Ordenar por X](docs/screenshots/CNCDril_02-Sort_by_X.png)|Ordenação por X|
+|![Ordenar por Y](docs/screenshots/CNCDril_03-Sort_by_Y.png)|Ordenação por Y|
+|![Ordenar por Caminho](docs/screenshots/CNCDril_04-Sort_by_path.png)|Ordenação por Caminho (OPTICS)|
+|![Código Fonte](docs/screenshots/CNCDril_05-code-source.png)|Código Fonte|
+|![Parâmetros](docs/screenshots/CNCDril_06-Set-tools-parametr.png)|Parâmetros das Ferramentas|
+|![Coordenadas](docs/screenshots/CNCDril_07-All-drilling-coordinat.png)|Todas as Coordenadas de Furação|
+
+### Aplicativo Web v2.0
+
+|Captura|Descrição|
+|---|---|
+|![Web 1](docs/screenshots/CNCDril_08-All-drilling-by-web.png)|Interface Web - Vista Principal|
+|![Web 2](docs/screenshots/CNCDril_09-All-drilling-by-web.png)|Interface Web - Geração de G-Code|
+|![Web 3](docs/screenshots/CNCDril_10-All-drilling-by-web.png)|Interface Web - Visualização|

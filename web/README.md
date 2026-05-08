@@ -288,3 +288,11 @@ Contributions are welcome! Please ensure:
 - Multi-language support is maintained
 - Help dialogs are updated for new features
 - Responsive design is preserved
+
+## Screenshots
+
+|Screenshot|Description|
+|---|---|
+|![Main View](../docs/screenshots/CNCDril_08-All-drilling-by-web.png)|Main Interface with File Upload|
+|![G-Code Generation](../docs/screenshots/CNCDril_09-All-drilling-by-web.png)|G-Code Generation and Preview|
+|![Visualization](../docs/screenshots/CNCDril_10-All-drilling-by-web.png)|Drill Path Visualization|

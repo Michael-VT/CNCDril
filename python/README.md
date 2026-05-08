@@ -136,3 +136,14 @@ Contributions are welcome! Please ensure:
 - All optimization algorithms match Delphi implementation
 - G-Code output is validated against original version
 - Multi-language support is maintained
+## Screenshots
+
+### Web Interface v2.0
+
+The project also includes a web-based interface:
+
+|Screenshot|Description|
+|---|---|
+|![Web 1](../docs/screenshots/CNCDril_08-All-drilling-by-web.png)|Web Interface - Main View|
+|![Web 2](../docs/screenshots/CNCDril_09-All-drilling-by-web.png)|Web Interface - G-Code Generation|
+|![Web 3](../docs/screenshots/CNCDril_10-All-drilling-by-web.png)|Web Interface - Visualization|

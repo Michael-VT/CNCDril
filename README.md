@@ -4,7 +4,7 @@ Multi-platform drill file optimizer for converting P-CAD/Altium .drl files to op
 
 ## Features
 
-- **Multiple Platforms**: Delphi VCL, Python CLI/GUI, and Web-based versions
+- **Multiple Platforms**: Delphi VCL, Python CLI/GUI, Node.js CLI, and Web-based versions
 - **Optimization Algorithms**:
   - SortByX: Sort holes by X coordinate
   - SortByY: Sort holes by Y coordinate
@@ -32,6 +32,12 @@ Multi-platform drill file optimizer for converting P-CAD/Altium .drl files to op
 - **Requirements**: Modern web browser (no server needed)
 - **Features**: Drag-and-drop, interactive visualization, multi-language
 - **Usage**: Open `web/index.html` in a browser
+ 
+### Node.js Version
+- **Location**: `nodejs/`
+- **Requirements**: Node.js 14+ (zero dependencies)
+- **Features**: CLI with 6 languages, same algorithms as all other versions
+- **Usage**: `node cncdril.mjs input.drl -o output.nc`
 
 ## Quick Start
 
@@ -52,6 +58,16 @@ python cncdril.py ../examples/RPCB0827_FIXTURE.DRL -o output.nc
 cd web
 python -m http.server 8000
 # Navigate to http://localhost:8000
+```
+```
+
+### Node.js Version
+```bash
+cd nodejs
+node cncdril.mjs ../examples/RPCB0827_FIXTURE.DRL -o output.nc
+
+# With language
+node cncdril.mjs ../examples/RPCB0827_FIXTURE.DRL --language ru -o output.nc
 ```
 
 ## File Format
@@ -175,6 +191,28 @@ Contributions are welcome! Please ensure:
 - OPTICS algorithm implementation
 - P-CAD/Altium file format support
 - CNC community feedback and testing
+
+## Screenshots
+
+### Delphi Application
+
+|Screenshot|Description|
+|---|---|
+|![Main Window](docs/screenshots/CNCDril_01.png)|Main Window|
+|![Sort by X](docs/screenshots/CNCDril_02-Sort_by_X.png)|Sort by X Optimization|
+|![Sort by Y](docs/screenshots/CNCDril_03-Sort_by_Y.png)|Sort by Y Optimization|
+|![Sort by Path](docs/screenshots/CNCDril_04-Sort_by_path.png)|Sort by Path (OPTICS)|
+|![Source Code](docs/screenshots/CNCDril_05-code-source.png)|Source Code|
+|![Tool Parameters](docs/screenshots/CNCDril_06-Set-tools-parametr.png)|Tool Parameters|
+|![All Coordinates](docs/screenshots/CNCDril_07-All-drilling-coordinat.png)|All Drilling Coordinates|
+
+### Web Application v2.0
+
+|Screenshot|Description|
+|---|---|
+|![Web Interface 1](docs/screenshots/CNCDril_08-All-drilling-by-web.png)|Web Interface - Main View|
+|![Web Interface 2](docs/screenshots/CNCDril_09-All-drilling-by-web.png)|Web Interface - G-Code Generation|
+|![Web Interface 3](docs/screenshots/CNCDril_10-All-drilling-by-web.png)|Web Interface - Visualization|
 
 ## Version History
 

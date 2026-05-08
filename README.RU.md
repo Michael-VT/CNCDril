@@ -101,3 +101,25 @@ python -m http.server 8000
 ## Лицензия
 
 MIT License - См. файл LICENSE для деталей
+
+## Скриншоты
+
+### Приложение Delphi
+
+|Скриншот|Описание|
+|---|---|
+|![Главное окно](docs/screenshots/CNCDril_01.png)|Главное окно|
+|![Сортировка по X](docs/screenshots/CNCDril_02-Sort_by_X.png)|Сортировка по X|
+|![Сортировка по Y](docs/screenshots/CNCDril_03-Sort_by_Y.png)|Сортировка по Y|
+|![Сортировка по пути](docs/screenshots/CNCDril_04-Sort_by_path.png)|Сортировка по пути (OPTICS)|
+|![Исходный код](docs/screenshots/CNCDril_05-code-source.png)|Исходный код|
+|![Параметры инструментов](docs/screenshots/CNCDril_06-Set-tools-parametr.png)|Параметры инструментов|
+|![Все координаты](docs/screenshots/CNCDril_07-All-drilling-coordinat.png)|Все координаты сверления|
+
+### Web-приложение v2.0
+
+|Скриншот|Описание|
+|---|---|
+|![Web интерфейс 1](docs/screenshots/CNCDril_08-All-drilling-by-web.png)|Web интерфейс - Главный вид|
+|![Web интерфейс 2](docs/screenshots/CNCDril_09-All-drilling-by-web.png)|Web интерфейс - Генерация G-Code|
+|![Web интерфейс 3](docs/screenshots/CNCDril_10-All-drilling-by-web.png)|Web интерфейс - Визуализация|
