@@ -13,7 +13,7 @@
             <span class="version">v2.0.0</span>
         </div>
         <div class="header-controls">
-            <button id="help_btn" class="header-btn" title="Help">❓ Help</button>
+            <button id="help_btn" class="header-btn" title="Help (F1)">❓ Help</button>
             <select id="language_selector" class="language-select">
                 <option value="en">English</option>
                 <option value="ru">Русский</option>
@@ -44,7 +44,7 @@
                     </div>
                     <div id="file_info" class="file-info" style="display: none;">
                         <span id="file_name"></span>
-                        <button id="clear_file" class="btn-secondary">✕</button>
+                        <button id="clear_file" class="btn-secondary">✕ Clear</button>
                     </div>
                 </div>
 
@@ -85,8 +85,8 @@
                 </div>
 
                 <div class="panel-section">
-                    <button id="generate_btn" class="btn-primary" id="generate_button">Generate G-Code</button>
-                    <button id="download_btn" class="btn-secondary" id="download_button" disabled>Download G-Code</button>
+                    <button id="generate_btn" class="btn-primary">Generate G-Code</button>
+                    <button id="download_btn" class="btn-secondary" disabled>Download G-Code</button>
                 </div>
 
                 <div class="panel-section">
@@ -116,7 +116,7 @@
                         </div>
                     </div>
                     <div class="canvas-info">
-                        <span id="canvas_status">Ready</span>
+                        <span id="canvas_status">Ready - v2.0.0</span>
                         <span id="coordinates"></span>
                     </div>
                 </div>
@@ -127,7 +127,7 @@
     <!-- About Dialog -->
     <div id="about_dialog" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span class="close" id="about_close">&times;</span>
             <h2 id="about_title">About CNCDril</h2>
             <div class="about-content" id="about_text">
                 <!-- Content will be populated by JavaScript -->
@@ -141,11 +141,14 @@
 
     <!-- Footer -->
     <footer>
-        <p>© 2024 CNCDril Contributors | <a href="#" id="footer_github">GitHub</a> | 
+        <p>© 2024 CNCDril Contributors | 
+        <a href="#" id="footer_github">GitHub</a> | 
         <span id="footer_version">v2.0.0</span> | 
-        <a href="#" id="footer_docs">Documentation</a></p>
+        <a href="#" id="footer_docs">Documentation</a>
+        </p>
     </footer>
 
+    <!-- Scripts loaded in correct order -->
     <script src="locales.js"></script>
     <script src="parser.js"></script>
     <script src="optimizer.js"></script>

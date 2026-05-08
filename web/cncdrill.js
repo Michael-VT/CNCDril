@@ -1,355 +1,225 @@
-// Main CNCDril Web Application
+// CNCDril Web Application v2.0.0
 
-// Version and project information
-const VERSION = "2.0.0";
-const PROJECT = "CNCDril";
-const GITHUB = "https://github.com/YOUR_USERNAME/CNCDril";
-const LICENSE = "MIT";
+var VERSION = '2.0.0';
+var PROJECT = 'CNCDril';
+var GITHUB  = 'https://github.com/AntiquityMC/CNCDril';
 
-let currentLanguage = 'en';
-let parser = null;
-let uiManager = null;
-let currentData = {
-    tools: {},
-    holes: {},
-    optimized: {},
-    gcode: ''
-};
+var currentLanguage = 'en';
+var uiManager = null;
+var currentData = { tools:{}, holes:{}, optimized:{}, gcode:'' };
 
-// Initialize application when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    initializeApp();
-});
+// ---- bootstrap ----
+document.addEventListener('DOMContentLoaded', init);
 
-function initializeApp() {
-    // Detect browser language
-    const browserLang = navigator.language.slice(0, 2);
-    if (translations[browserLang]) {
-        currentLanguage = browserLang;
-    }
-    
-    // Initialize UI manager
-    uiManager = new UIManager();
-    
-    // Setup event listeners
-    setupEventListeners();
-    
-    // Apply initial translations
-    applyLanguage(currentLanguage);
+function init() {
+    // detect browser lang
+    var bl = (navigator.language || 'en').slice(0,2);
+    if (translations[bl]) currentLanguage = bl;
+
+    // saved preference
+    try { var saved = localStorage.getItem('cncdril_lang'); if (saved && translations[saved]) currentLanguage = saved; } catch(e){}
+
     document.getElementById('language_selector').value = currentLanguage;
-    
-    // Setup About dialog
-    setupAboutDialog();
-    
-    // Show version info in console
-    console.log(`${PROJECT} v${VERSION}`);
-    console.log(`GitHub: ${GITHUB}`);
-    console.log(`License: ${LICENSE}`);
+    applyLanguage(currentLanguage);
+
+    uiManager = new UIManager();
+    wireEvents();
 }
 
-function setupAboutDialog() {
-    const modal = document.getElementById('about_dialog');
-    const helpBtn = document.getElementById('help_btn');
-    const closeBtn = document.querySelector('.close');
-    
-    helpBtn.addEventListener('click', () => {
-        showAboutDialog();
-    });
-    
-    closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-    
-    window.addEventListener('click', (e) => {
-        if (e.target == modal) {
-            modal.style.display = 'none';
-        }
-    });
-    
-    // Setup footer links
-    document.getElementById('footer_github').addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open(GITHUB, '_blank');
-    });
-    
-    document.getElementById('footer_docs').addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open(GITHUB + '#readme', '_blank');
-    });
-    
-    // Keyboard shortcut for help (F1)
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'F1') {
-            e.preventDefault();
-            showAboutDialog();
-        }
-    });
-}
-
-function showAboutDialog() {
-    const modal = document.getElementById('about_dialog');
-    const title = document.getElementById('about_title');
-    const content = document.getElementById('about_text');
-    const docsLink = document.getElementById('docs_link');
-    const githubLink = document.getElementById('github_link');
-    
-    title.textContent = t('about_title', currentLanguage);
-    
-    content.innerHTML = t('about_content', currentLanguage, 
-        version=VERSION, 
-        project=PROJECT, 
-        github=GITHUB,
-        license=LICENSE
-    );
-    
-    docsLink.href = GITHUB + '#readme';
-    docsLink.textContent = t('docs_link', currentLanguage);
-    docsLink.target = '_blank';
-    
-    githubLink.href = GITHUB;
-    githubLink.textContent = t('github_link', currentLanguage);
-    githubLink.target = '_blank';
-    
-    modal.style.display = 'block';
-}
-
-function setupEventListeners() {
-    // File input
-    const fileInput = document.getElementById('file_input');
-    const dropZone = document.getElementById('file_drop_zone');
-    
-    fileInput.addEventListener('change', handleFileSelect);
-    
-    // Drag and drop
-    dropZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropZone.classList.add('drag-over');
-    });
-    
-    dropZone.addEventListener('dragleave', () => {
-        dropZone.classList.remove('drag-over');
-    });
-    
-    dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropZone.classList.remove('drag-over');
-        
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            handleFile(files[0]);
-        }
-    });
-    
-    // Clear file button
-    document.getElementById('clear_file').addEventListener('click', clearFile);
-    
-    // Language selector
-    document.getElementById('language_selector').addEventListener('change', (e) => {
-        setLanguage(e.target.value);
-    });
-    
-    // Optimization algorithm change
-    document.getElementById('optimize_algorithm').addEventListener('change', () => {
-        if (currentData.holes && Object.keys(currentData.holes).length > 0) {
-            optimizeAndDraw();
-        }
-    });
-    
-    // Generate G-Code button
-    document.getElementById('generate_btn').addEventListener('click', generateGCode);
-    
-    // Download G-Code button
-    document.getElementById('download_btn').addEventListener('click', downloadGCode);
-}
-
-function handleFileSelect(e) {
-    const file = e.target.files[0];
-    if (file) {
-        handleFile(file);
+// ---- translation ----
+function applyLanguage(lang) {
+    var map = {
+        'app_title':'app_title',
+        'file_section_title':'file_section_title',
+        'drop_zone_label':'drop_zone_label',
+        'optimization_title':'optimization_title',
+        'algorithm_label':'algorithm_label',
+        'parameters_title':'parameters_title',
+        'safe_z_label':'safe_z_label',
+        'drill_z_label':'drill_z_label',
+        'feed_rate_label':'feed_rate_label',
+        'tools_title':'tools_title',
+        'generate_btn':'generate_button',
+        'download_btn':'download_button',
+        'gcode_preview_title':'gcode_preview_title',
+        'preview_title':'preview_title',
+        'show_paths_label':'show_paths_label',
+        'edit_mode_label':'edit_mode_label',
+        'no_file_message':'no_file_message'
+    };
+    for (var id in map) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = t(map[id], lang);
+    }
+    var sel = document.getElementById('optimize_algorithm');
+    if (sel) {
+        sel.options[0].text = t('algorithm_none', lang);
+        sel.options[1].text = t('algorithm_x', lang);
+        sel.options[2].text = t('algorithm_y', lang);
+        sel.options[3].text = t('algorithm_path', lang);
     }
 }
 
-function handleFile(file) {
-    // Validate file extension
+// ---- events ----
+function wireEvents() {
+    // language
+    on('language_selector','change', function(e){ setLang(e.target.value); });
+
+    // file input
+    var fi = document.getElementById('file_input');
+    if (fi) fi.addEventListener('change', function(e){ if(e.target.files[0]) loadFile(e.target.files[0]); });
+
+    // drag-drop
+    var dz = document.getElementById('file_drop_zone');
+    if (dz) {
+        dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('drag-over'); });
+        dz.addEventListener('dragleave', function(){ dz.classList.remove('drag-over'); });
+        dz.addEventListener('drop', function(e){ e.preventDefault(); dz.classList.remove('drag-over'); if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+    }
+
+    on('clear_file','click', clearFile);
+    on('optimize_algorithm','change', function(){ if(Object.keys(currentData.holes).length) optimizeAndDraw(); });
+    on('generate_btn','click', generateGCode);
+    on('download_btn','click', downloadGCode);
+    on('zoom_in','click', function(){ if(uiManager) uiManager.zoomIn(); });
+    on('zoom_out','click', function(){ if(uiManager) uiManager.zoomOut(); });
+    on('reset_view','click', function(){ if(uiManager) uiManager.resetView(); });
+    on('show_paths','change', function(){ if(uiManager) uiManager.draw(); });
+
+    // help
+    on('help_btn','click', showAbout);
+    on('about_close','click', function(){ document.getElementById('about_dialog').style.display='none'; });
+    window.addEventListener('click', function(e){ var m=document.getElementById('about_dialog'); if(e.target===m) m.style.display='none'; });
+    document.addEventListener('keydown', function(e){ if(e.key==='F1'){e.preventDefault(); showAbout();} });
+
+    // footer
+    on('footer_github','click', function(e){ e.preventDefault(); window.open(GITHUB,'_blank'); });
+    on('footer_docs','click', function(e){ e.preventDefault(); window.open(GITHUB+'#readme','_blank'); });
+}
+
+function on(id, evt, fn) { var el=document.getElementById(id); if(el) el.addEventListener(evt, fn); }
+
+// ---- language ----
+function setLang(lang) {
+    currentLanguage = lang;
+    applyLanguage(lang);
+    try { localStorage.setItem('cncdril_lang', lang); } catch(e){}
+}
+
+// ---- file handling ----
+function loadFile(file) {
     if (!file.name.toLowerCase().endsWith('.drl')) {
-        showError('error_invalid_file');
+        alert(t('error_invalid_file', currentLanguage));
         return;
     }
-    
-    // Read file
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const content = e.target.result;
-        parseDRLFile(content, file.name);
-    };
-    reader.onerror = () => {
-        showError('error_parse_failed');
-    };
+    var reader = new FileReader();
+    reader.onload = function(e) { parseContent(e.target.result, file.name); };
     reader.readAsText(file);
 }
 
-function parseDRLFile(content, filename) {
+function parseContent(text, filename) {
     try {
-        parser = new DRLParser();
-        const result = parser.parseDRL(content);
-        
+        var parser = new DRLParser();
+        var result = parser.parseDRL(text);
         currentData.tools = result.tools;
         currentData.holes = result.holes;
-        
-        // Update UI
+
         document.getElementById('file_info').style.display = 'flex';
         document.getElementById('file_name').textContent = filename;
         document.getElementById('drop_zone_text').style.display = 'none';
-        
-        // Update tools info
-        uiManager.updateToolsInfo(currentData.tools, currentData.holes);
-        
-        // Optimize and draw
+
+        if (uiManager) uiManager.updateToolsInfo(currentData.tools, currentData.holes);
         optimizeAndDraw();
-        
-        // Update status
-        updateStatus('canvas_status_loaded', { file: filename });
-        
-    } catch (error) {
-        console.error('Parse error:', error);
-        showError('error_parse_failed');
+
+        var st = document.getElementById('canvas_status');
+        if (st) st.textContent = formatTemplate(t('canvas_status_loaded', currentLanguage), {file:filename});
+    } catch(err) {
+        alert(t('error_parse_failed', currentLanguage) + '\n' + err.message);
     }
 }
 
 function optimizeAndDraw() {
-    const algorithm = document.getElementById('optimize_algorithm').value;
-    
+    var algo = document.getElementById('optimize_algorithm').value;
     currentData.optimized = {};
-    
-    Object.entries(currentData.holes).forEach(([toolId, points]) => {
-        currentData.optimized[toolId] = OptimizationAlgorithms.optimize(points, algorithm);
-    });
-    
-    uiManager.setData(currentData.tools, currentData.holes, currentData.optimized);
+    for (var tid in currentData.holes) {
+        currentData.optimized[tid] = OptimizationAlgorithms.optimize(currentData.holes[tid], algo);
+    }
+    if (uiManager) uiManager.setData(currentData.tools, currentData.holes, currentData.optimized);
 }
 
+function clearFile() {
+    currentData = { tools:{}, holes:{}, optimized:{}, gcode:'' };
+    document.getElementById('file_input').value = '';
+    document.getElementById('file_info').style.display = 'none';
+    document.getElementById('drop_zone_text').style.display = 'block';
+    document.getElementById('tools_info').innerHTML = '<p id="no_file_message">' + t('no_file_message', currentLanguage) + '</p>';
+    document.getElementById('gcode_preview').value = '';
+    document.getElementById('download_btn').disabled = true;
+    if (uiManager) uiManager.setData(null, null, null);
+}
+
+// ---- gcode ----
 function generateGCode() {
-    if (!currentData.holes || Object.keys(currentData.holes).length === 0) {
-        showError('error_no_file');
-        return;
-    }
-    
-    try {
-        updateStatus('canvas_status_generating');
-        
-        // Get parameters
-        const params = {
-            safeZ: parseFloat(document.getElementById('safe_z').value),
-            drillZ: parseFloat(document.getElementById('drill_z').value),
-            feedRate: parseFloat(document.getElementById('feed_rate').value),
-            plungeRate: parseFloat(document.getElementById('feed_rate').value) / 2,
-            toolChangeX: 0.0,
-            toolChangeY: 0.0,
-        };
-        
-        // Generate G-Code
-        const generator = new GCodeGenerator(params);
-        currentData.gcode = generator.generate(currentData.tools, currentData.holes, currentData.optimized);
-        
-        // Add version info to G-Code
-        const header = `% ${PROJECT} G-Code Output\n% Version ${VERSION}\n% GitHub: ${GITHUB}\n% Generated: ${new Date().toISOString()}\n`;
-        currentData.gcode = header + currentData.gcode.split('\n').slice(4).join('\n');
-        
-        // Update UI
-        document.getElementById('gcode_preview').value = currentData.gcode;
-        document.getElementById('download_btn').disabled = false;
-        
-        // Calculate stats
-        const totalHoles = Object.values(currentData.holes).reduce((sum, holes) => sum + holes.length, 0);
-        updateStatus('canvas_status_done', { holes: totalHoles });
-        
-        showSuccess('success_generated', { holes: totalHoles });
-        
-    } catch (error) {
-        console.error('Generation error:', error);
-        showError('error_parse_failed');
-    }
+    if (!Object.keys(currentData.holes).length) { alert(t('error_no_file', currentLanguage)); return; }
+
+    var params = {
+        safeZ:     parseFloat(document.getElementById('safe_z').value),
+        drillZ:    parseFloat(document.getElementById('drill_z').value),
+        feedRate:   parseFloat(document.getElementById('feed_rate').value),
+        plungeRate: parseFloat(document.getElementById('feed_rate').value) / 2,
+        toolChangeX: 0, toolChangeY: 0
+    };
+
+    var gen = new GCodeGenerator(params);
+    var body = gen.generate(currentData.tools, currentData.holes, currentData.optimized);
+
+    // prepend header with version
+    currentData.gcode = '% ' + PROJECT + ' G-Code Output\n% Version ' + VERSION + '\n% GitHub: ' + GITHUB + '\n' + body;
+
+    document.getElementById('gcode_preview').value = currentData.gcode;
+    document.getElementById('download_btn').disabled = false;
+
+    var total = 0;
+    for (var tid in currentData.holes) total += currentData.holes[tid].length;
+    var st = document.getElementById('canvas_status');
+    if (st) st.textContent = formatTemplate(t('canvas_status_done', currentLanguage), {holes:total});
+    alert(formatTemplate(t('success_generated', currentLanguage), {holes:total}));
 }
 
 function downloadGCode() {
     if (!currentData.gcode) return;
-    
-    const blob = new Blob([currentData.gcode], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${PROJECT}_v${VERSION}_output.nc`;
+    var blob = new Blob([currentData.gcode], {type:'text/plain'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = PROJECT + '_v' + VERSION + '_output.nc';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
 }
 
-function clearFile() {
-    currentData = {
-        tools: {},
-        holes: {},
-        optimized: {},
-        gcode: ''
-    };
-    
-    document.getElementById('file_input').value = '';
-    document.getElementById('file_info').style.display = 'none';
-    document.getElementById('drop_zone_text').style.display = 'block';
-    document.getElementById('tools_info').innerHTML = `<p id="no_file_message">${t('no_file_message')}</p>`;
-    document.getElementById('gcode_preview').value = '';
-    document.getElementById('download_btn').disabled = true;
-    
-    uiManager.setData(null, null, null);
-    updateStatus('canvas_status_ready');
-}
+// ---- about dialog ----
+function showAbout() {
+    var m = document.getElementById('about_dialog');
+    document.getElementById('about_title').textContent = t('about_title', currentLanguage);
+    document.getElementById('about_text').innerHTML =
+        '<h3>' + PROJECT + ' v' + VERSION + '</h3>' +
+        '<p>CNC Drill File Optimizer</p>' +
+        '<p>Converts P-CAD / Altium .drl files to optimized G-Code.</p>' +
+        '<h3>Features</h3><ul>' +
+        '<li>SortByX, SortByY, SortByPath (OPTICS)</li>' +
+        '<li>6 languages: EN, RU, UK, PT, DE, FR</li>' +
+        '<li>Interactive visualization</li>' +
+        '<li>Drag-and-drop file upload</li></ul>' +
+        '<h3>How to use</h3><ol>' +
+        '<li>Drop a .drl file or click to browse</li>' +
+        '<li>Select optimization algorithm</li>' +
+        '<li>Click Generate G-Code</li>' +
+        '<li>Download the result</li></ol>' +
+        '<p><strong>License:</strong> ' + 'MIT</p>';
 
-function setLanguage(lang) {
-    currentLanguage = lang;
-    applyLanguage(lang);
-    
-    // Save preference
-    localStorage.setItem('cncdril_language', lang);
-}
-
-function applyLanguage(lang) {
-    // Update specific elements
-    document.getElementById('app_title').textContent = t('app_title', lang);
-    document.getElementById('file_section_title').textContent = t('file_section_title', lang);
-    document.getElementById('drop_zone_label').textContent = t('drop_zone_label', lang);
-    document.getElementById('optimization_title').textContent = t('optimization_title', lang);
-    document.getElementById('algorithm_label').textContent = t('algorithm_label', lang);
-    document.getElementById('parameters_title').textContent = t('parameters_title', lang);
-    document.getElementById('safe_z_label').textContent = t('safe_z_label', lang);
-    document.getElementById('drill_z_label').textContent = t('drill_z_label', lang);
-    document.getElementById('feed_rate_label').textContent = t('feed_rate_label', lang);
-    document.getElementById('tools_title').textContent = t('tools_title', lang);
-    document.getElementById('generate_btn').textContent = t('generate_button', lang);
-    document.getElementById('download_btn').textContent = t('download_button', lang);
-    document.getElementById('gcode_preview_title').textContent = t('gcode_preview_title', lang);
-    document.getElementById('preview_title').textContent = t('preview_title', lang);
-    document.getElementById('show_paths_label').textContent = t('show_paths_label', lang);
-    document.getElementById('edit_mode_label').textContent = t('edit_mode_label', lang);
-    
-    // Update algorithm options
-    const algorithmSelect = document.getElementById('optimize_algorithm');
-    algorithmSelect.options[0].text = t('algorithm_none', lang);
-    algorithmSelect.options[1].text = t('algorithm_x', lang);
-    algorithmSelect.options[2].text = t('algorithm_y', lang);
-    algorithmSelect.options[3].text = t('algorithm_path', lang);
-}
-
-function updateStatus(key, data = {}) {
-    const statusEl = document.getElementById('canvas_status');
-    const template = t(key, currentLanguage);
-    statusEl.textContent = formatTemplate(template, data);
-}
-
-function showError(key) {
-    alert(t(key, currentLanguage));
-}
-
-function showSuccess(key, data = {}) {
-    const template = t(key, currentLanguage);
-    alert(formatTemplate(template, data));
+    var dl = document.getElementById('docs_link');
+    var gl = document.getElementById('github_link');
+    dl.href = GITHUB + '#readme'; dl.textContent = '📚 ' + t('docs_link_text', currentLanguage); dl.target='_blank';
+    gl.href = GITHUB;             gl.textContent = '🔗 ' + t('github_link_text', currentLanguage); gl.target='_blank';
+    m.style.display = 'block';
 }

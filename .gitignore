@@ -1,18 +1,9 @@
-# CNCDril - Git Ignore File
-# Exclude build artifacts, temporary files, and IDE-specific files
+# CNCDril .gitignore
 
-# =============================================================================
-# Delphi / C++ Builder
-# =============================================================================
+# === Delphi ===
 *.dcu
 *.exe
 *.dll
-*.so
-*.dylib
-*.a
-*.lib
-*.o
-*.obj
 *.~pas
 *.~dfm
 *.~dpk
@@ -21,157 +12,59 @@
 *.~h
 *.~cpp
 *.dsk
-*.dcp
-*.dcpil
-*.rst
-*.lps
-*.hpp
 *.bkm
 *.ddp
 *.identcache
 *.local
-__history/
 *.stat
 *.map
 *.drc
-*.rsm
+*.cfg
+*.dof
+__history/
 
-# =============================================================================
-# Python
-# =============================================================================
+# === Python ===
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
-.Python
-*.so
-*.egg
-*.egg-info/
-dist/
-build/
 venv/
-env/
-ENV/
-*.log
-.mypy_cache/
-.pytest_cache/
-.coverage
-htmlcov/
+*.egg-info/
+*.bak
+*.bak2
 
-# =============================================================================
-# Web / Node.js
-# =============================================================================
+# === Web ===
 node_modules/
-npm-debug.log
-yarn-error.log
-.pnpm-debug.log
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-package-lock.json
-yarn.lock
 
-# =============================================================================
-# IDE / Editor
-# =============================================================================
+# === IDE ===
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+
+# === OS ===
 .DS_Store
 Thumbs.db
-*.sublime-project
-*.sublime-workspace
-.fleet/
-.nova/
-*.sublime-workspace
+._*
 
-# =============================================================================
-# Build artifacts
-# =============================================================================
+# === Build / Runtime ===
 *.o
 *.a
 *.lib
 *.obj
-*.exe
-*.dll
-*.dylib
 *.so
-*.app
-*.apk
-
-# =============================================================================
-# Test and temporary files
-# =============================================================================
-test_output.nc
+*.dylib
+output.nc
 *.nc.bak
 *.tmp
 *.temp
-*.bak
-*.backup
-*~
-*.rej
-*.orig
 
-# =============================================================================
-# Documentation builds
-# =============================================================================
-docs/_build/
-site/
-*.aux
-*.toc
-*.lot
-*.lof
-*.out
-*.bbl
-*.blg
+# === Server ===
+server.log
+server.pid
+/tmp/cncdril_server.pid
 
-# =============================================================================
-# Package files (excluding example DRL files)
-# =============================================================================
-*.zip
-*.tar.gz
-*.7z
-*.rar
-*.tar
-*.bz2
-*.xz
-
-# =============================================================================
-# OS specific
-# =============================================================================
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-Desktop.ini
-
-# =============================================================================
-# Delphi-specific resources (keep source .rc, exclude compiled)
-# =============================================================================
-*.RES
-*.res
-
-# =============================================================================
-# Large bitmap files (Delphi bitmaps - not needed in repo)
-# =============================================================================
+# === Large files that were in original repo ===
 *.bmp
-# Keep screenshots in PNG format
-# Exclude only if they're in root and should be in docs/
-
-# =============================================================================
-# Other
-# =============================================================================
-*.tmp
-*.temp
-*.cache
-*.pid
-*.seed
-*.pid.lock
-*.pid.lock.*
+*.RES
+*.doc
