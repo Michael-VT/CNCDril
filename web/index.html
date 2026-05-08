@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNCDril - Drill File Optimizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1 id="app_title">CNCDril - Drill File Optimizer</h1>
+        <div class="header-controls">
+            <select id="language_selector">
+                <option value="en">English</option>
+                <option value="ru">Русский</option>
+                <option value="uk">Українська</option>
+                <option value="pt">Português</option>
+                <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
+            </select>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Left Panel - Controls -->
+            <div class="control-panel">
+                <div class="panel-section">
+                    <h2 id="file_section_title">File Input</h2>
+                    <div class="file-upload" id="file_drop_zone">
+                        <input type="file" id="file_input" accept=".drl" hidden>
+                        <label for="file_input" id="drop_zone_text">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span id="drop_zone_label">Drop DRL file here or click to browse</span>
+                        </label>
+                    </div>
+                    <div id="file_info" class="file-info" style="display: none;">
+                        <span id="file_name"></span>
+                        <button id="clear_file" class="btn-secondary">✕</button>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2 id="optimization_title">Optimization</h2>
+                    <div class="control-group">
+                        <label for="optimize_algorithm" id="algorithm_label">Algorithm:</label>
+                        <select id="optimize_algorithm">
+                            <option value="none">None</option>
+                            <option value="x">Sort by X</option>
+                            <option value="y">Sort by Y</option>
+                            <option value="path" selected>Sort by Path (OPTICS)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2 id="parameters_title">Parameters</h2>
+                    <div class="control-group">
+                        <label for="safe_z" id="safe_z_label">Safe Z (mm):</label>
+                        <input type="number" id="safe_z" value="5.0" step="0.1" min="0">
+                    </div>
+                    <div class="control-group">
+                        <label for="drill_z" id="drill_z_label">Drill Z (mm):</label>
+                        <input type="number" id="drill_z" value="-2.0" step="0.1">
+                    </div>
+                    <div class="control-group">
+                        <label for="feed_rate" id="feed_rate_label">Feed Rate (mm/min):</label>
+                        <input type="number" id="feed_rate" value="100" step="10" min="1">
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2 id="tools_title">Tools Information</h2>
+                    <div id="tools_info" class="info-box">
+                        <p id="no_file_message">Load a DRL file to see tools information</p>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <button id="generate_btn" class="btn-primary" id="generate_button">Generate G-Code</button>
+                    <button id="download_btn" class="btn-secondary" id="download_button" disabled>Download G-Code</button>
+                </div>
+
+                <div class="panel-section">
+                    <h2 id="gcode_preview_title">G-Code Preview</h2>
+                    <textarea id="gcode_preview" readonly placeholder="G-Code will appear here..."></textarea>
+                </div>
+            </div>
+
+            <!-- Right Panel - Visualization -->
+            <div class="preview-panel">
+                <div class="panel-section">
+                    <h2 id="preview_title">Drill Path Preview</h2>
+                    <div class="canvas-container">
+                        <canvas id="preview_canvas"></canvas>
+                        <div class="canvas-controls">
+                            <button id="zoom_in" class="btn-small" title="Zoom In">+</button>
+                            <button id="zoom_out" class="btn-small" title="Zoom Out">−</button>
+                            <button id="reset_view" class="btn-small" title="Reset View">⟲</button>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="show_paths" checked>
+                                <span id="show_paths_label">Show Paths</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="edit_mode">
+                                <span id="edit_mode_label">Edit Mode</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="canvas-info">
+                        <span id="canvas_status">Ready</span>
+                        <span id="coordinates"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="locales.js"></script>
+    <script src="parser.js"></script>
+    <script src="optimizer.js"></script>
+    <script src="gcode-generator.js"></script>
+    <script src="ui.js"></script>
+    <script src="cncdrill.js"></script>
+</body>
+</html>
