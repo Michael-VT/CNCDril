@@ -419,7 +419,7 @@ class GCodeGenerator:
         # Header
         lines.append(f"% {PROJECT} G-Code Output")
         lines.append(f"% Version {VERSION}")
-        lines.append(f"% GitHub: {GITHUB}")
+        lines.append(f"% GitHub: {__github}")
         lines.append("G21 ; Set units to mm")
         lines.append(f"G90 ; Absolute positioning")
         lines.append(f"G0 Z{self.params['safe_z']:.3f} ; Move to safe height")

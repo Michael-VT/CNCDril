@@ -210,3 +210,215 @@ function formatTemplate(template, data) {
         return data[key] !== undefined ? data[key] : match;
     });
 }
+// Additional translations for About dialog
+const aboutTranslations = {
+    en: {
+        about_title: "About CNCDril",
+        about_content: `
+            <h3>${PROJECT} - CNC Drill File Optimizer</h3>
+            <p><strong>Version:</strong> ${VERSION}</p>
+            <p>A multi-platform drill file optimizer for converting P-CAD/Altium .drl files 
+            to optimized G-Code for CNC machines.</p>
+            
+            <h3>Features:</h3>
+            <ul>
+                <li>Three optimization algorithms (SortByX, SortByY, SortByPath)</li>
+                <li>Multi-language support (EN, RU, UK, PT, DE, FR)</li>
+                <li>Interactive drill path visualization</li>
+                <li>Real-time parameter adjustment</li>
+                <li>Export to standard G-Code format</li>
+                <li>Drag-and-drop file upload</li>
+            </ul>
+            
+            <h3>Quick Start:</h3>
+            <ol>
+                <li>Drop a .drl file or click to browse</li>
+                <li>Select optimization algorithm</li>
+                <li>Adjust parameters if needed</li>
+                <li>Click "Generate G-Code"</li>
+                <li>Download the result</li>
+            </ol>
+            
+            <p><strong>GitHub:</strong> ${GITHUB}</p>
+            <p><strong>License:</strong> ${LICENSE}</p>
+            <p>© 2024 ${PROJECT} Contributors</p>
+        `,
+        docs_link: "📚 Documentation",
+        github_link: "🔗 GitHub Repository",
+    },
+    ru: {
+        about_title: "О CNCDril",
+        about_content: `
+            <h3>${PROJECT} - Оптимизатор сверловки для ЧПУ</h3>
+            <p><strong>Версия:</strong> ${VERSION}</p>
+            <p>Мультиплатформенный оптимизатор сверловочных файлов для преобразования 
+            P-CAD/Altium .drl файлов в оптимизированный G-Code для ЧПУ станков.</p>
+            
+            <h3>Возможности:</h3>
+            <ul>
+                <li>Три алгоритма оптимизации (SortByX, SortByY, SortByPath)</li>
+                <li>Мультиязычный интерфейс (EN, RU, UK, PT, DE, FR)</li>
+                <li>Интерактивная визуализация пути сверления</li>
+                <li>Настройка параметров в реальном времени</li>
+                <li>Экспорт в стандартный формат G-Code</li>
+                <li>Загрузка файлов перетаскиванием</li>
+            </ul>
+            
+            <h3>Быстрый старт:</h3>
+            <ol>
+                <li>Перетащите .drl файл или нажмите для выбора</li>
+                <li>Выберите алгоритм оптимизации</li>
+                <li>Настройте параметры при необходимости</li>
+                <li>Нажмите "Создать G-Code"</li>
+                <li>Скачайте результат</li>
+            </ol>
+            
+            <p><strong>GitHub:</strong> ${GITHUB}</p>
+            <p><strong>Лицензия:</strong> ${LICENSE}</p>
+            <p>© 2024 ${PROJECT} Контрибьюторы</p>
+        `,
+        docs_link: "📚 Документация",
+        github_link: "🔗 Репозиторий GitHub",
+    },
+    uk: {
+        about_title: "Про CNCDril",
+        about_content: `
+            <h3>${PROJECT} - Оптимізатор свердління для ЧПУ</h3>
+            <p><strong>Версія:</strong> ${VERSION}</p>
+            <p>Мультиплатформний оптимізатор сверловочних файлів для перетворення 
+            P-CAD/Altium .drl файлів в оптимізований G-Code для ЧПУ верстатів.</p>
+            
+            <h3>Можливості:</h3>
+            <ul>
+                <li>Три алгоритми оптимізації (SortByX, SortByY, SortByPath)</li>
+                <li>Мультимовний інтерфейс (EN, RU, UK, PT, DE, FR)</li>
+                <li>Інтерактивна візуалізація шляху свердлення</li>
+                <li>Налаштування параметрів в реальному часі</li>
+                <li>Експорт в стандартний формат G-Code</li>
+                <li>Завантаження файлів перетягуванням</li>
+            </ul>
+            
+            <h3>Швидкий старт:</h3>
+            <ol>
+                <li>Перетягніть .drl файл або натисніть для вибору</li>
+                <li>Виберіть алгоритм оптимізації</li>
+                <li>Налаштуйте параметри при необхідності</li>
+                <li>Натисніть "Створити G-Code"</li>
+                <li>Завантажте результат</li>
+            </ol>
+            
+            <p><strong>GitHub:</strong> ${GITHUB}</p>
+            <p><strong>Ліцензія:</strong> ${LICENSE}</p>
+            <p>© 2024 ${PROJECT} Контриб'ютори</p>
+        `,
+        docs_link: "📚 Документація",
+        github_link: "🔗 Репозиторій GitHub",
+    },
+    pt: {
+        about_title: "Sobre CNCDril",
+        about_content: `
+            <h3>${PROJECT} - Otimizador de Furações CNC</h3>
+            <p><strong>Versão:</strong> ${VERSION}</p>
+            <p>Otimizador multiplataforma de arquivos de furação para converter arquivos 
+            P-CAD/Altium .drl em G-Code otimizado para máquinas CNC.</p>
+            
+            <h3>Recursos:</h3>
+            <ul>
+                <li>Três algoritmos de otimização (SortByX, SortByY, SortByPath)</li>
+                <li>Suporte multilíngue (EN, RU, UK, PT, DE, FR)</li>
+                <li>Visualização interativa do caminho de furação</li>
+                <li>Ajuste de parâmetros em tempo real</li>
+                <li>Exportação para formato G-Code padrão</li>
+                <li>Upload de arquivos arrastar e soltar</li>
+            </ul>
+            
+            <h3>Início Rápido:</h3>
+            <ol>
+                <li>Arraste um arquivo .drl ou clique para navegar</li>
+                <li>Selecione o algoritmo de otimização</li>
+                <li>Ajuste os parâmetros se necessário</li>
+                <li>Clique em "Gerar G-Code"</li>
+                <li>Baixe o resultado</li>
+            </ol>
+            
+            <p><strong>GitHub:</strong> ${GITHUB}</p>
+            <p><strong>Licença:</strong> ${LICENSE}</p>
+            <p>© 2024 ${PROJECT} Colaboradores</p>
+        `,
+        docs_link: "📚 Documentação",
+        github_link: "🔗 Repositório GitHub",
+    },
+    de: {
+        about_title: "Über CNCDril",
+        about_content: `
+            <h3>${PROJECT} - Bohrungs-Optimierer CNC</h3>
+            <p><strong>Version:</strong> ${VERSION}</p>
+            <p>Multiplattform-Bohrdatei-Optimierer zur Konvertierung von P-CAD/Altium .drl-Dateien 
+            in optimierten G-Code für CNC-Maschinen.</p>
+            
+            <h3>Funktionen:</h3>
+            <ul>
+                <li>Drei Optimierungsalgorithmen (SortByX, SortByY, SortByPath)</li>
+                <li>Mehrsprachige Unterstützung (EN, RU, UK, PT, DE, FR)</li>
+                <li>Interaktive Bohrpfad-Visualisierung</li>
+                <li>Echtzeit-Parameteranpassung</li>
+                <li>Export in Standard-G-Code-Format</li>
+                <li>Datei-Upload per Drag-and-Drop</li>
+            </ul>
+            
+            <h3>Schnellstart:</h3>
+            <ol>
+                <li>.drl-Datei hier ablegen oder zum Durchsuchen klicken</li>
+                <li>Optimierungsalgorithmus auswählen</li>
+                <li>Parameter bei Bedarf anpassen</li>
+                <li>"G-Code generieren" klicken</li>
+                <li>Ergebnis herunterladen</li>
+            </ol>
+            
+            <p><strong>GitHub:</strong> ${GITHUB}</p>
+            <p><strong>Lizenz:</strong> ${LICENSE}</p>
+            <p>© 2024 ${PROJECT} Mitwirkende</p>
+        `,
+        docs_link: "📚 Dokumentation",
+        github_link: "🔗 GitHub-Repository",
+    },
+    fr: {
+        about_title: "À propos de CNCDril",
+        about_content: `
+            <h3>${PROJECT} - Optimisateur de Perçage CNC</h3>
+            <p><strong>Version:</strong> ${VERSION}</p>
+            <p>Optimiseur de fichiers de perçage multiplateforme pour convertir les fichiers 
+            P-CAD/Altium .drl en G-Code optimisé pour les machines CNC.</p>
+            
+            <h3>Fonctionnalités:</h3>
+            <ul>
+                <li>Trois algorithmes d'optimisation (SortByX, SortByY, SortByPath)</li>
+                <li>Support multilingue (EN, RU, UK, PT, DE, FR)</li>
+                <li>Visualisation interactive du chemin de perçage</li>
+                <li>Ajustement des paramètres en temps réel</li>
+                <li>Export au format G-Code standard</li>
+                <li>Téléchargement de fichiers par glisser-déposer</li>
+            </ul>
+            
+            <h3>Démarrage Rapide:</h3>
+            <ol>
+                <li>Déposez un fichier .drl ou cliquez pour parcourir</li>
+                <li>Sélectionnez l'algorithme d'optimisation</li>
+                <li>Ajustez les paramètres si nécessaire</li>
+                <li>Cliquez sur "Générer G-Code"</li>
+                <li>Téléchargez le résultat</li>
+            </ol>
+            
+            <p><strong>GitHub:</strong> ${GITHUB}</p>
+            <p><strong>Licence:</strong> ${LICENSE}</p>
+            <p>© 2024 ${PROJECT} Contributeurs</p>
+        `,
+        docs_link: "📚 Documentation",
+        github_link: "🔗 Dépôt GitHub",
+    },
+};
+
+// Merge about translations into main translations
+Object.keys(aboutTranslations).forEach(lang => {
+    translations[lang] = { ...translations[lang], ...aboutTranslations[lang] };
+});

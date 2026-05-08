@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CNCDril - Drill File Optimizer</title>
+    <title>CNCDril - Drill File Optimizer v2.0.0</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1 id="app_title">CNCDril - Drill File Optimizer</h1>
+        <div class="header-left">
+            <h1 id="app_title">CNCDril - Drill File Optimizer</h1>
+            <span class="version">v2.0.0</span>
+        </div>
         <div class="header-controls">
-            <select id="language_selector">
+            <button id="help_btn" class="header-btn" title="Help">❓ Help</button>
+            <select id="language_selector" class="language-select">
                 <option value="en">English</option>
                 <option value="ru">Русский</option>
                 <option value="uk">Українська</option>
@@ -119,6 +123,28 @@
             </div>
         </div>
     </main>
+
+    <!-- About Dialog -->
+    <div id="about_dialog" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="about_title">About CNCDril</h2>
+            <div class="about-content" id="about_text">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="about-links">
+                <a href="#" id="docs_link" target="_blank">📚 Documentation</a>
+                <a href="#" id="github_link" target="_blank">🔗 GitHub Repository</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 CNCDril Contributors | <a href="#" id="footer_github">GitHub</a> | 
+        <span id="footer_version">v2.0.0</span> | 
+        <a href="#" id="footer_docs">Documentation</a></p>
+    </footer>
 
     <script src="locales.js"></script>
     <script src="parser.js"></script>

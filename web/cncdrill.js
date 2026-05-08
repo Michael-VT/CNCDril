@@ -1,5 +1,11 @@
 // Main CNCDril Web Application
 
+// Version and project information
+const VERSION = "2.0.0";
+const PROJECT = "CNCDril";
+const GITHUB = "https://github.com/YOUR_USERNAME/CNCDril";
+const LICENSE = "MIT";
+
 let currentLanguage = 'en';
 let parser = null;
 let uiManager = null;
@@ -31,6 +37,80 @@ function initializeApp() {
     // Apply initial translations
     applyLanguage(currentLanguage);
     document.getElementById('language_selector').value = currentLanguage;
+    
+    // Setup About dialog
+    setupAboutDialog();
+    
+    // Show version info in console
+    console.log(`${PROJECT} v${VERSION}`);
+    console.log(`GitHub: ${GITHUB}`);
+    console.log(`License: ${LICENSE}`);
+}
+
+function setupAboutDialog() {
+    const modal = document.getElementById('about_dialog');
+    const helpBtn = document.getElementById('help_btn');
+    const closeBtn = document.querySelector('.close');
+    
+    helpBtn.addEventListener('click', () => {
+        showAboutDialog();
+    });
+    
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+    
+    window.addEventListener('click', (e) => {
+        if (e.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+    
+    // Setup footer links
+    document.getElementById('footer_github').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(GITHUB, '_blank');
+    });
+    
+    document.getElementById('footer_docs').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(GITHUB + '#readme', '_blank');
+    });
+    
+    // Keyboard shortcut for help (F1)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'F1') {
+            e.preventDefault();
+            showAboutDialog();
+        }
+    });
+}
+
+function showAboutDialog() {
+    const modal = document.getElementById('about_dialog');
+    const title = document.getElementById('about_title');
+    const content = document.getElementById('about_text');
+    const docsLink = document.getElementById('docs_link');
+    const githubLink = document.getElementById('github_link');
+    
+    title.textContent = t('about_title', currentLanguage);
+    
+    content.innerHTML = t('about_content', currentLanguage, 
+        version=VERSION, 
+        project=PROJECT, 
+        github=GITHUB,
+        license=LICENSE
+    );
+    
+    docsLink.href = GITHUB + '#readme';
+    docsLink.textContent = t('docs_link', currentLanguage);
+    docsLink.target = '_blank';
+    
+    githubLink.href = GITHUB;
+    githubLink.textContent = t('github_link', currentLanguage);
+    githubLink.target = '_blank';
+    
+    modal.style.display = 'block';
 }
 
 function setupEventListeners() {
@@ -171,6 +251,10 @@ function generateGCode() {
         const generator = new GCodeGenerator(params);
         currentData.gcode = generator.generate(currentData.tools, currentData.holes, currentData.optimized);
         
+        // Add version info to G-Code
+        const header = `% ${PROJECT} G-Code Output\n% Version ${VERSION}\n% GitHub: ${GITHUB}\n% Generated: ${new Date().toISOString()}\n`;
+        currentData.gcode = header + currentData.gcode.split('\n').slice(4).join('\n');
+        
         // Update UI
         document.getElementById('gcode_preview').value = currentData.gcode;
         document.getElementById('download_btn').disabled = false;
@@ -194,7 +278,7 @@ function downloadGCode() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'output.nc';
+    a.download = `${PROJECT}_v${VERSION}_output.nc`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -229,12 +313,6 @@ function setLanguage(lang) {
 }
 
 function applyLanguage(lang) {
-    // Apply translations to elements with data-i18n attribute
-    document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        element.textContent = t(key, lang);
-    });
-    
     // Update specific elements
     document.getElementById('app_title').textContent = t('app_title', lang);
     document.getElementById('file_section_title').textContent = t('file_section_title', lang);
@@ -268,12 +346,10 @@ function updateStatus(key, data = {}) {
 }
 
 function showError(key) {
-    // Simple alert for errors - could be enhanced with a toast notification
     alert(t(key, currentLanguage));
 }
 
 function showSuccess(key, data = {}) {
-    // Simple alert for success - could be enhanced with a toast notification
     const template = t(key, currentLanguage);
     alert(formatTemplate(template, data));
 }
