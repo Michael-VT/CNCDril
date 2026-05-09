@@ -1,0 +1,1573 @@
+<!-- CNCDril Standalone v2.0.0 — Single-file HTML. No server required. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNCDril - Drill File Optimizer v2.0.0</title>
+<style>
+/* CNCDril Web Application Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.header-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+#language_selector {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: none;
+    background-color: #34495e;
+    color: white;
+    cursor: pointer;
+}
+
+main {
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 2rem;
+    height: calc(100vh - 150px);
+}
+
+.control-panel,
+.preview-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.panel-section {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.panel-section h2 {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 0.5rem;
+}
+
+/* File Upload */
+.file-upload {
+    border: 2px dashed #bdc3c7;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.file-upload:hover {
+    border-color: #3498db;
+    background-color: #ecf0f1;
+}
+
+.file-upload.drag-over {
+    border-color: #3498db;
+    background-color: #d5e8f7;
+}
+
+#drop_zone_text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: #7f8c8d;
+    cursor: pointer;
+}
+
+#drop_zone_text svg {
+    color: #3498db;
+}
+
+.file-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+}
+
+#file_name {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.btn-secondary {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.btn-secondary:hover {
+    color: #c0392b;
+}
+
+/* Controls */
+.control-group {
+    margin-bottom: 1rem;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+    color: #34495e;
+}
+
+.control-group select,
+.control-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.control-group select:focus,
+.control-group input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* Info Box */
+.info-box {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0.75rem;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.info-box p {
+    margin-bottom: 0.5rem;
+}
+
+.info-box hr {
+    margin: 0.5rem 0;
+    border: none;
+    border-top: 1px solid #bdc3c7;
+}
+
+/* Buttons */
+.btn-primary {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+.btn-primary:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.btn-secondary:disabled {
+    color: #95a5a6;
+    cursor: not-allowed;
+}
+
+/* G-Code Preview */
+#gcode_preview {
+    width: 100%;
+    height: 150px;
+    padding: 0.75rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    resize: vertical;
+}
+
+/* Canvas */
+.canvas-container {
+    position: relative;
+    height: 500px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#preview_canvas {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+}
+
+#preview_canvas:active {
+    cursor: grabbing;
+}
+
+.canvas-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 0.5rem;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-small {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #bdc3c7;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-small:hover {
+    background-color: #ecf0f1;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    margin: 0;
+}
+
+.canvas-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .canvas-container {
+        height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    .panel-section {
+        padding: 1rem;
+    }
+}
+
+/* Loading Animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+/* Header Enhancements */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.version {
+    background: rgba(52, 152, 219, 0.3);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.header-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+
+.header-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.language-select {
+    margin-left: 1rem;
+}
+
+/* Modal Dialog */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+}
+
+.about-content {
+    margin: 20px 0;
+    line-height: 1.6;
+}
+
+.about-content h3 {
+    color: #2c3e50;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.about-content ul {
+    margin-left: 20px;
+}
+
+.about-content li {
+    margin-bottom: 5px;
+}
+
+.about-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.about-links a {
+    color: #3498db;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.about-links a:hover {
+    background: #3498db;
+    color: white;
+}
+
+/* Footer */
+footer {
+    background-color: #34495e;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer a {
+    color: #3498db;
+    text-decoration: none;
+    margin: 0 0.5rem;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <h1 id="app_title">CNCDril - Drill File Optimizer</h1>
+            <span class="version">v2.0.0</span>
+        </div>
+        <div class="header-controls">
+            <button id="help_btn" class="header-btn" title="Help (F1)">❓ Help</button>
+            <select id="language_selector" class="language-select">
+                <option value="en">English</option>
+                <option value="ru">Русский</option>
+                <option value="uk">Українська</option>
+                <option value="pt">Português</option>
+                <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
+            </select>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Left Panel - Controls -->
+            <div class="control-panel">
+                <div class="panel-section">
+                    <h2 id="file_section_title">File Input</h2>
+                    <div class="file-upload" id="file_drop_zone">
+                        <input type="file" id="file_input" accept=".drl" hidden>
+                        <label for="file_input" id="drop_zone_text">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span id="drop_zone_label">Drop DRL file here or click to browse</span>
+                        </label>
+                    </div>
+                    <div id="file_info" class="file-info" style="display: none;">
+                        <span id="file_name"></span>
+                        <button id="clear_file" class="btn-secondary">✕ Clear</button>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2 id="optimization_title">Optimization</h2>
+                    <div class="control-group">
+                        <label for="optimize_algorithm" id="algorithm_label">Algorithm:</label>
+                        <select id="optimize_algorithm">
+                            <option value="none">None</option>
+                            <option value="x">Sort by X</option>
+                            <option value="y">Sort by Y</option>
+                            <option value="path" selected>Sort by Path (OPTICS)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2 id="parameters_title">Parameters</h2>
+                    <div class="control-group">
+                        <label for="safe_z" id="safe_z_label">Safe Z (mm):</label>
+                        <input type="number" id="safe_z" value="5.0" step="0.1" min="0">
+                    </div>
+                    <div class="control-group">
+                        <label for="drill_z" id="drill_z_label">Drill Z (mm):</label>
+                        <input type="number" id="drill_z" value="-2.0" step="0.1">
+                    </div>
+                    <div class="control-group">
+                        <label for="feed_rate" id="feed_rate_label">Feed Rate (mm/min):</label>
+                        <input type="number" id="feed_rate" value="100" step="10" min="1">
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h2 id="tools_title">Tools Information</h2>
+                    <div id="tools_info" class="info-box">
+                        <p id="no_file_message">Load a DRL file to see tools information</p>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <button id="generate_btn" class="btn-primary">Generate G-Code</button>
+                    <button id="download_btn" class="btn-secondary" disabled>Download G-Code</button>
+                </div>
+
+                <div class="panel-section">
+                    <h2 id="gcode_preview_title">G-Code Preview</h2>
+                    <textarea id="gcode_preview" readonly placeholder="G-Code will appear here..."></textarea>
+                </div>
+            </div>
+
+            <!-- Right Panel - Visualization -->
+            <div class="preview-panel">
+                <div class="panel-section">
+                    <h2 id="preview_title">Drill Path Preview</h2>
+                    <div class="canvas-container">
+                        <canvas id="preview_canvas"></canvas>
+                        <div class="canvas-controls">
+                            <button id="zoom_in" class="btn-small" title="Zoom In">+</button>
+                            <button id="zoom_out" class="btn-small" title="Zoom Out">−</button>
+                            <button id="reset_view" class="btn-small" title="Reset View">⟲</button>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="show_paths" checked>
+                                <span id="show_paths_label">Show Paths</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="edit_mode">
+                                <span id="edit_mode_label">Edit Mode</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="canvas-info">
+                        <span id="canvas_status">Ready - v2.0.0</span>
+                        <span id="coordinates"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- About Dialog -->
+    <div id="about_dialog" class="modal">
+        <div class="modal-content">
+            <span class="close" id="about_close">&times;</span>
+            <h2 id="about_title">About CNCDril</h2>
+            <div class="about-content" id="about_text">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="about-links">
+                <a href="#" id="docs_link" target="_blank">📚 Documentation</a>
+                <a href="#" id="github_link" target="_blank">🔗 GitHub Repository</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 CNCDril Contributors |
+        <a href="#" id="footer_github">GitHub</a> |
+        <span id="footer_version">v2.0.0</span> |
+        <a href="#" id="footer_docs">Documentation</a>
+        </p>
+    </footer>
+
+<script>
+// Localization data for CNCDril web application
+// All translations in one place - no external dependencies
+
+const translations = {
+    en: {
+        app_title: "CNCDril - Drill File Optimizer",
+        file_section_title: "File Input",
+        drop_zone_label: "Drop DRL file here or click to browse",
+        optimization_title: "Optimization",
+        algorithm_label: "Algorithm:",
+        algorithm_none: "None",
+        algorithm_x: "Sort by X",
+        algorithm_y: "Sort by Y",
+        algorithm_path: "Sort by Path (OPTICS)",
+        parameters_title: "Parameters",
+        safe_z_label: "Safe Z (mm):",
+        drill_z_label: "Drill Z (mm):",
+        feed_rate_label: "Feed Rate (mm/min):",
+        tools_title: "Tools Information",
+        no_file_message: "Load a DRL file to see tools information",
+        generate_button: "Generate G-Code",
+        download_button: "Download G-Code",
+        gcode_preview_title: "G-Code Preview",
+        preview_title: "Drill Path Preview",
+        show_paths_label: "Show Paths",
+        edit_mode_label: "Edit Mode",
+        canvas_status_ready: "Ready",
+        canvas_status_loaded: "Loaded: {file}",
+        canvas_status_generating: "Generating G-Code...",
+        canvas_status_done: "G-Code generated: {holes} holes",
+        error_invalid_file: "Invalid DRL file format",
+        error_parse_failed: "Failed to parse DRL file",
+        error_no_file: "Please load a DRL file first",
+        success_generated: "G-Code generated successfully! Total holes: {holes}",
+        about_title: "About CNCDril",
+        docs_link_text: "Documentation",
+        github_link_text: "GitHub Repository",
+    },
+    ru: {
+        app_title: "CNCDril - Оптимизатор сверловки",
+        file_section_title: "Входной файл",
+        drop_zone_label: "Перетащите DRL файл или нажмите для выбора",
+        optimization_title: "Оптимизация",
+        algorithm_label: "Алгоритм:",
+        algorithm_none: "Нет",
+        algorithm_x: "Сортировать по X",
+        algorithm_y: "Сортировать по Y",
+        algorithm_path: "Сортировать по пути (OPTICS)",
+        parameters_title: "Параметры",
+        safe_z_label: "Безопасный Z (мм):",
+        drill_z_label: "Глубина сверления (мм):",
+        feed_rate_label: "Скорость (мм/мин):",
+        tools_title: "Информация об инструментах",
+        no_file_message: "Загрузите DRL файл для информации об инструментах",
+        generate_button: "Создать G-Code",
+        download_button: "Скачать G-Code",
+        gcode_preview_title: "Предпросмотр G-Code",
+        preview_title: "Предпросмотр пути сверления",
+        show_paths_label: "Показывать пути",
+        edit_mode_label: "Режим редактирования",
+        canvas_status_ready: "Готов",
+        canvas_status_loaded: "Загружен: {file}",
+        canvas_status_generating: "Создание G-Code...",
+        canvas_status_done: "G-Code создан: {holes} отверстий",
+        error_invalid_file: "Неверный формат DRL файла",
+        error_parse_failed: "Ошибка разбора DRL файла",
+        error_no_file: "Сначала загрузите DRL файл",
+        success_generated: "G-Code успешно создан! Всего отверстий: {holes}",
+        about_title: "О программе CNCDril",
+        docs_link_text: "Документация",
+        github_link_text: "Репозиторий GitHub",
+    },
+    uk: {
+        app_title: "CNCDril - Оптимізатор свердління",
+        file_section_title: "Вхідний файл",
+        drop_zone_label: "Перетягніть DRL файл або натисніть для вибору",
+        optimization_title: "Оптимізація",
+        algorithm_label: "Алгоритм:",
+        algorithm_none: "Немає",
+        algorithm_x: "Сортувати за X",
+        algorithm_y: "Сортувати за Y",
+        algorithm_path: "Сортувати за шляхом (OPTICS)",
+        parameters_title: "Параметри",
+        safe_z_label: "Безпечний Z (мм):",
+        drill_z_label: "Глибина свердлення (мм):",
+        feed_rate_label: "Швидкість (мм/хв):",
+        tools_title: "Інформація про інструменти",
+        no_file_message: "Завантажте DRL файл для інформації про інструменти",
+        generate_button: "Створити G-Code",
+        download_button: "Завантажити G-Code",
+        gcode_preview_title: "Попередній перегляд G-Code",
+        preview_title: "Попередній перегляд шляху свердлення",
+        show_paths_label: "Показувати шляхи",
+        edit_mode_label: "Режим редагування",
+        canvas_status_ready: "Готовий",
+        canvas_status_loaded: "Завантажено: {file}",
+        canvas_status_generating: "Створення G-Code...",
+        canvas_status_done: "G-Code створено: {holes} отворів",
+        error_invalid_file: "Невірний формат DRL файлу",
+        error_parse_failed: "Помилка розбору DRL файлу",
+        error_no_file: "Спочатку завантажте DRL файл",
+        success_generated: "G-Code успішно створено! Всього отворів: {holes}",
+        about_title: "Про програму CNCDril",
+        docs_link_text: "Документація",
+        github_link_text: "Репозиторій GitHub",
+    },
+    pt: {
+        app_title: "CNCDril - Otimizador de Furações",
+        file_section_title: "Arquivo de Entrada",
+        drop_zone_label: "Arraste o arquivo DRL ou clique para selecionar",
+        optimization_title: "Otimização",
+        algorithm_label: "Algoritmo:",
+        algorithm_none: "Nenhum",
+        algorithm_x: "Ordenar por X",
+        algorithm_y: "Ordenar por Y",
+        algorithm_path: "Ordenar por Caminho (OPTICS)",
+        parameters_title: "Parâmetros",
+        safe_z_label: "Z Seguro (mm):",
+        drill_z_label: "Profundidade (mm):",
+        feed_rate_label: "Avanço (mm/min):",
+        tools_title: "Informações das Ferramentas",
+        no_file_message: "Carregue um arquivo DRL para ver informações",
+        generate_button: "Gerar G-Code",
+        download_button: "Baixar G-Code",
+        gcode_preview_title: "Preview do G-Code",
+        preview_title: "Preview do Caminho de Furação",
+        show_paths_label: "Mostrar Caminhos",
+        edit_mode_label: "Modo de Edição",
+        canvas_status_ready: "Pronto",
+        canvas_status_loaded: "Carregado: {file}",
+        canvas_status_generating: "Gerando G-Code...",
+        canvas_status_done: "G-Code gerado: {holes} furos",
+        error_invalid_file: "Formato de arquivo DRL inválido",
+        error_parse_failed: "Falha ao analisar arquivo DRL",
+        error_no_file: "Por favor, carregue um arquivo DRL primeiro",
+        success_generated: "G-Code gerado com sucesso! Total de furos: {holes}",
+        about_title: "Sobre o CNCDril",
+        docs_link_text: "Documentação",
+        github_link_text: "Repositório GitHub",
+    },
+    de: {
+        app_title: "CNCDril - Bohrungs-Optimierer",
+        file_section_title: "Dateieingabe",
+        drop_zone_label: "DRL-Datei ablegen oder klicken",
+        optimization_title: "Optimierung",
+        algorithm_label: "Algorithmus:",
+        algorithm_none: "Keiner",
+        algorithm_x: "Nach X sortieren",
+        algorithm_y: "Nach Y sortieren",
+        algorithm_path: "Nach Pfad sortieren (OPTICS)",
+        parameters_title: "Parameter",
+        safe_z_label: "Sicheres Z (mm):",
+        drill_z_label: "Bohrtiefe (mm):",
+        feed_rate_label: "Vorschub (mm/min):",
+        tools_title: "Werkzeuginformationen",
+        no_file_message: "DRL-Datei laden für Werkzeuginformationen",
+        generate_button: "G-Code generieren",
+        download_button: "G-Code herunterladen",
+        gcode_preview_title: "G-Code-Vorschau",
+        preview_title: "Bohrpfad-Vorschau",
+        show_paths_label: "Pfade anzeigen",
+        edit_mode_label: "Bearbeitungsmodus",
+        canvas_status_ready: "Bereit",
+        canvas_status_loaded: "Geladen: {file}",
+        canvas_status_generating: "G-Code wird generiert...",
+        canvas_status_done: "G-Code generiert: {holes} Löcher",
+        error_invalid_file: "Ungültiges DRL-Dateiformat",
+        error_parse_failed: "Fehler beim Parsen der DRL-Datei",
+        error_no_file: "Bitte laden Sie zuerst eine DRL-Datei",
+        success_generated: "G-Code erfolgreich generiert! Gesamt: {holes}",
+        about_title: "Über CNCDril",
+        docs_link_text: "Dokumentation",
+        github_link_text: "GitHub-Repository",
+    },
+    fr: {
+        app_title: "CNCDril - Optimisateur de Perçage",
+        file_section_title: "Fichier d'Entrée",
+        drop_zone_label: "Déposez le fichier DRL ici ou cliquez",
+        optimization_title: "Optimisation",
+        algorithm_label: "Algorithme:",
+        algorithm_none: "Aucun",
+        algorithm_x: "Trier par X",
+        algorithm_y: "Trier par Y",
+        algorithm_path: "Trier par Chemin (OPTICS)",
+        parameters_title: "Paramètres",
+        safe_z_label: "Z Sécuritaire (mm):",
+        drill_z_label: "Profondeur (mm):",
+        feed_rate_label: "Avance (mm/min):",
+        tools_title: "Informations des Outils",
+        no_file_message: "Chargez un fichier DRL pour voir les infos",
+        generate_button: "Générer G-Code",
+        download_button: "Télécharger G-Code",
+        gcode_preview_title: "Aperçu G-Code",
+        preview_title: "Aperçu du Chemin de Perçage",
+        show_paths_label: "Afficher les Chemins",
+        edit_mode_label: "Mode Édition",
+        canvas_status_ready: "Prêt",
+        canvas_status_loaded: "Chargé: {file}",
+        canvas_status_generating: "Génération du G-Code...",
+        canvas_status_done: "G-Code généré: {holes} trous",
+        error_invalid_file: "Format de fichier DRL invalide",
+        error_parse_failed: "Échec de l'analyse du fichier DRL",
+        error_no_file: "Veuillez d'abord charger un fichier DRL",
+        success_generated: "G-Code généré avec succès! Total: {holes}",
+        about_title: "À propos de CNCDril",
+        docs_link_text: "Documentation",
+        github_link_text: "Dépôt GitHub",
+    }
+};
+
+// Get translation for key
+function t(key, lang) {
+    if (!lang) lang = 'en';
+    var dict = translations[lang] || translations['en'];
+    return dict[key] || key;
+}
+
+// Replace {placeholder} in template string
+function formatTemplate(template, data) {
+    var result = template;
+    for (var key in data) {
+        result = result.replace('{' + key + '}', data[key]);
+    }
+    return result;
+}
+</script>
+
+<script>
+// DRL File Parser for JavaScript
+
+class Point {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    distanceTo(other) {
+        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+    }
+
+    toString() {
+        return `Point(${this.x.toFixed(4)}, ${this.y.toFixed(4)})`;
+    }
+}
+
+class Tool {
+    constructor(toolId, diameter) {
+        this.toolId = toolId;
+        this.diameter = diameter;
+    }
+
+    toString() {
+        return `Tool(${this.toolId}, Ø${this.diameter.toFixed(2)}mm)`;
+    }
+}
+
+class DRLParser {
+    constructor() {
+        this.tools = {};
+        this.holes = {};
+        this.metric = true;
+        this.rawLines = [];
+    }
+
+    parseDRL(content) {
+        // Parse DRL file content
+        const lines = content.split('\n').map(line => line.trim().toUpperCase());
+        this.rawLines = lines;
+
+        let currentTool = null;
+
+        for (let line of lines) {
+            if (!line || line.startsWith(';')) continue;
+
+            // Detect metric/inch
+            if (line.includes('METRIC')) {
+                this.metric = true;
+            } else if (line.includes('INCH')) {
+                this.metric = false;
+            }
+
+            // Skip the separator
+            if (line === '%') continue;
+
+            // Parse tool definitions: T01C1.73
+            const toolMatch = line.match(/^T(\d+)C([\d.]+)$/);
+            if (toolMatch && !line.includes('X') && !line.includes('Y')) {
+                const toolId = toolMatch[1].padStart(2, '0');
+                const diameter = parseFloat(toolMatch[2]);
+                this.tools[toolId] = new Tool(toolId, diameter);
+                continue;
+            }
+
+            // Parse tool switch: T01 (standalone lines after %)
+            const switchMatch = line.match(/^T(\d+)$/);
+            if (switchMatch) {
+                currentTool = switchMatch[1].padStart(2, '0');
+                if (!this.holes[currentTool]) {
+                    this.holes[currentTool] = [];
+                }
+                // Skip T00 (end marker)
+                if (currentTool === '00') {
+                    currentTool = null;
+                }
+                continue;
+            }
+
+            // Extract X and Y coordinates
+            const xMatch = line.match(/X\+?(\d+)/);
+            const yMatch = line.match(/Y\+?(\d+)/);
+
+            if (xMatch && yMatch && currentTool) {
+                // Parse coordinates - format is X+005004 meaning 5.004mm
+                const x = parseFloat(xMatch[1]) / 1000.0;
+                const y = parseFloat(yMatch[1]) / 1000.0;
+
+                if (!this.holes[currentTool]) {
+                    this.holes[currentTool] = [];
+                }
+
+                this.holes[currentTool].push(new Point(x, y));
+            }
+        }
+
+        // Remove empty tools
+        Object.keys(this.holes).forEach(toolId => {
+            if (this.holes[toolId].length === 0) {
+                delete this.holes[toolId];
+            }
+        });
+
+        return { tools: this.tools, holes: this.holes };
+    }
+
+    getSummary() {
+        const totalHoles = Object.values(this.holes).reduce((sum, holes) => sum + holes.length, 0);
+        return {
+            totalTools: Object.keys(this.tools).length,
+            totalHoles: totalHoles,
+            metric: this.metric
+        };
+    }
+}
+</script>
+
+<script>
+// Optimization Algorithms for Drill Paths
+
+class OptimizationAlgorithms {
+    /**
+     * Sort points by X coordinate (bubble sort - matches Delphi implementation)
+     */
+    static sortByX(points) {
+        const result = [...points];
+        const n = result.length;
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n - i - 1; j++) {
+                if (result[j].x > result[j + 1].x) {
+                    [result[j], result[j + 1]] = [result[j + 1], result[j]];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Sort points by Y coordinate (bubble sort - matches Delphi implementation)
+     */
+    static sortByY(points) {
+        const result = [...points];
+        const n = result.length;
+
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n - i - 1; j++) {
+                if (result[j].y > result[j + 1].y) {
+                    [result[j], result[j + 1]] = [result[j + 1], result[j]];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * OPTICS-like clustering for path optimization
+     * Uses nearest neighbor approach (matches Delphi SortByPath implementation)
+     */
+    static opticsOptimization(points, startPos = null) {
+        if (!points || points.length === 0) {
+            return [];
+        }
+
+        const result = [];
+        const remaining = [...points];
+        let current = startPos || remaining[0];
+
+        while (remaining.length > 0) {
+            // Find nearest point to current position
+            let nearestIdx = 0;
+            let nearestDist = Infinity;
+
+            for (let i = 0; i < remaining.length; i++) {
+                const dist = current.distanceTo(remaining[i]);
+                if (dist < nearestDist) {
+                    nearestDist = dist;
+                    nearestIdx = i;
+                }
+            }
+
+            // Move to nearest point
+            current = remaining.splice(nearestIdx, 1)[0];
+            result.push(current);
+        }
+
+        return result;
+    }
+
+    /**
+     * Calculate total path length
+     */
+    static calculatePathLength(points, startPos = null) {
+        if (!points || points.length === 0) {
+            return 0;
+        }
+
+        let total = 0;
+        let current = startPos || points[0];
+
+        for (const point of points) {
+            total += current.distanceTo(point);
+            current = point;
+        }
+
+        return total;
+    }
+
+    /**
+     * Apply optimization based on algorithm name
+     */
+    static optimize(points, algorithm, startPos = null) {
+        switch (algorithm) {
+            case 'x':
+                return this.sortByX(points);
+            case 'y':
+                return this.sortByY(points);
+            case 'path':
+                return this.opticsOptimization(points, startPos);
+            case 'none':
+            default:
+                return [...points];
+        }
+    }
+}
+</script>
+
+<script>
+// G-Code Generator for CNC Drill Files
+// No global constants here - they come from cncdrill.js
+
+class GCodeGenerator {
+    constructor(params) {
+        this.params = params || {
+            safeZ: 5.0,
+            drillZ: -2.0,
+            feedRate: 100,
+            plungeRate: 50,
+            toolChangeX: 0.0,
+            toolChangeY: 0.0,
+        };
+    }
+
+    generate(tools, holes, optimizedHoles) {
+        var lines = [];
+
+        lines.push('G21 ; Set units to mm');
+        lines.push('G90 ; Absolute positioning');
+        lines.push('G0 Z' + this.params.safeZ.toFixed(3) + ' ; Move to safe height');
+        lines.push('');
+
+        var sortedToolIds = Object.keys(holes).sort();
+
+        for (var ti = 0; ti < sortedToolIds.length; ti++) {
+            var toolId = sortedToolIds[ti];
+            var tool = tools[toolId];
+            var points = optimizedHoles[toolId] || [];
+
+            if (!tool || points.length === 0) continue;
+
+            lines.push('% Tool ' + toolId + ' - D' + tool.diameter.toFixed(2) + 'mm - ' + points.length + ' holes');
+            lines.push('G0 X' + this.params.toolChangeX.toFixed(3) + ' Y' + this.params.toolChangeY.toFixed(3));
+            lines.push('T' + parseInt(toolId) + ' M6 ; Tool change');
+            lines.push('S1000 M3 ; Spindle on');
+            lines.push('');
+
+            for (var i = 0; i < points.length; i++) {
+                var p = points[i];
+                lines.push('% Hole ' + (i + 1));
+                lines.push('G0 X' + p.x.toFixed(3) + ' Y' + p.y.toFixed(3) + ' ; Move to hole');
+                lines.push('G1 Z' + this.params.drillZ.toFixed(3) + ' F' + this.params.plungeRate + ' ; Drill');
+                lines.push('G0 Z' + this.params.safeZ.toFixed(3) + ' ; Retract');
+                lines.push('');
+            }
+        }
+
+        lines.push('M5 ; Spindle off');
+        lines.push('G0 X0 Y0 ; Move to origin');
+        lines.push('M30 ; End of program');
+
+        return lines.join('\n');
+    }
+}
+</script>
+
+<script>
+// UI Management and Canvas Visualization
+
+class UIManager {
+    constructor() {
+        this.canvas = document.getElementById('preview_canvas');
+        if (!this.canvas) return;
+
+        this.ctx = this.canvas.getContext('2d');
+        this.scale = 1.0;
+        this.offsetX = 0;
+        this.offsetY = 0;
+        this.isDragging = false;
+        this.lastX = 0;
+        this.lastY = 0;
+        this.toolsData = null;
+        this.holesData = null;
+        this.optimizedData = null;
+
+        this.resizeCanvas();
+        window.addEventListener('resize', () => this.resizeCanvas());
+
+        this.canvas.addEventListener('mousedown', (e) => {
+            this.isDragging = true;
+            this.lastX = e.clientX;
+            this.lastY = e.clientY;
+        });
+        this.canvas.addEventListener('mousemove', (e) => {
+            if (this.isDragging) {
+                this.offsetX += e.clientX - this.lastX;
+                this.offsetY += e.clientY - this.lastY;
+                this.lastX = e.clientX;
+                this.lastY = e.clientY;
+                this.draw();
+            }
+            var rect = this.canvas.getBoundingClientRect();
+            var dc = this.toDataCoords(e.clientX - rect.left, e.clientY - rect.top);
+            var coordEl = document.getElementById('coordinates');
+            if (coordEl) coordEl.textContent = 'X:' + dc.x.toFixed(2) + ' Y:' + dc.y.toFixed(2);
+        });
+        this.canvas.addEventListener('mouseup', () => { this.isDragging = false; });
+        this.canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            this.zoom(e.deltaY > 0 ? 0.9 : 1.1);
+        });
+
+        this.clearCanvas();
+    }
+
+    resizeCanvas() {
+        if (!this.canvas) return;
+        var container = this.canvas.parentElement;
+        this.canvas.width = container.clientWidth;
+        this.canvas.height = container.clientHeight;
+        this.draw();
+    }
+
+    clearCanvas() {
+        if (!this.ctx) return;
+        var w = this.canvas.width, h = this.canvas.height;
+        this.ctx.fillStyle = '#f5f5f5';
+        this.ctx.fillRect(0, 0, w, h);
+
+        // Grid
+        this.ctx.strokeStyle = '#ddd';
+        this.ctx.lineWidth = 1;
+        var gs = 50 * this.scale;
+        if (gs < 10) gs = 10;
+        this.ctx.beginPath();
+        for (var x = this.offsetX % gs; x < w; x += gs) { this.ctx.moveTo(x,0); this.ctx.lineTo(x,h); }
+        for (var y = this.offsetY % gs; y < h; y += gs) { this.ctx.moveTo(0,y); this.ctx.lineTo(w,y); }
+        this.ctx.stroke();
+    }
+
+    toCanvasCoords(x, y) {
+        return { x: x * this.scale + this.offsetX, y: -y * this.scale + this.offsetY };
+    }
+    toDataCoords(cx, cy) {
+        return { x: (cx - this.offsetX) / this.scale, y: -(cy - this.offsetY) / this.scale };
+    }
+
+    setData(tools, holes, optimized) {
+        this.toolsData = tools;
+        this.holesData = holes;
+        this.optimizedData = optimized;
+        if (holes) this.fitToScreen();
+        this.draw();
+    }
+
+    fitToScreen() {
+        if (!this.holesData) return;
+        var minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
+        for (var tid in this.holesData) {
+            var pts = this.holesData[tid];
+            for (var i = 0; i < pts.length; i++) {
+                if (pts[i].x < minX) minX = pts[i].x;
+                if (pts[i].y < minY) minY = pts[i].y;
+                if (pts[i].x > maxX) maxX = pts[i].x;
+                if (pts[i].y > maxY) maxY = pts[i].y;
+            }
+        }
+        var w = this.canvas.width, h = this.canvas.height;
+        var dw = maxX - minX, dh = maxY - minY;
+        if (dw > 0 && dh > 0) {
+            this.scale = Math.min((w - 60) / dw, (h - 60) / dh);
+            this.offsetX = w / 2 - ((minX + maxX) / 2) * this.scale;
+            this.offsetY = h / 2 + ((minY + maxY) / 2) * this.scale;
+        }
+    }
+
+    draw() {
+        this.clearCanvas();
+        if (!this.optimizedData) return;
+        var colors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#34495e','#1abc9c'];
+        var ci = 0;
+        var showPaths = true;
+        var spEl = document.getElementById('show_paths');
+        if (spEl) showPaths = spEl.checked;
+
+        for (var tid in this.optimizedData) {
+            var pts = this.optimizedData[tid];
+            if (!pts || pts.length === 0) continue;
+            var color = colors[ci % colors.length];
+
+            if (showPaths && pts.length > 1) {
+                this.ctx.strokeStyle = color;
+                this.ctx.lineWidth = 2;
+                this.ctx.globalAlpha = 0.3;
+                this.ctx.beginPath();
+                var f = this.toCanvasCoords(pts[0].x, pts[0].y);
+                this.ctx.moveTo(f.x, f.y);
+                for (var i = 1; i < pts.length; i++) {
+                    var c = this.toCanvasCoords(pts[i].x, pts[i].y);
+                    this.ctx.lineTo(c.x, c.y);
+                }
+                this.ctx.stroke();
+                this.ctx.globalAlpha = 1.0;
+            }
+
+            for (var i = 0; i < pts.length; i++) {
+                var c = this.toCanvasCoords(pts[i].x, pts[i].y);
+                this.ctx.beginPath();
+                this.ctx.arc(c.x, c.y, 5, 0, 2 * Math.PI);
+                this.ctx.fillStyle = color;
+                this.ctx.fill();
+                this.ctx.strokeStyle = '#fff';
+                this.ctx.lineWidth = 1.5;
+                this.ctx.stroke();
+            }
+            ci++;
+        }
+    }
+
+    zoomIn()  { this.zoom(1.2); }
+    zoomOut() { this.zoom(0.8); }
+    zoom(factor) {
+        var cx = this.canvas.width / 2, cy = this.canvas.height / 2;
+        this.offsetX = cx - (cx - this.offsetX) * factor;
+        this.offsetY = cy - (cy - this.offsetY) * factor;
+        this.scale *= factor;
+        this.draw();
+    }
+    resetView() { this.fitToScreen(); this.draw(); }
+
+    updateToolsInfo(tools, holes) {
+        var el = document.getElementById('tools_info');
+        if (!el) return;
+        var total = 0;
+        for (var tid in holes) total += holes[tid].length;
+        var html = '<p><strong>Tools:</strong> ' + Object.keys(tools).length + '</p>';
+        html += '<p><strong>Holes:</strong> ' + total + '</p><hr>';
+        var ids = Object.keys(tools).sort();
+        for (var i = 0; i < ids.length; i++) {
+            var tid = ids[i];
+            var tool = tools[tid];
+            var cnt = holes[tid] ? holes[tid].length : 0;
+            html += '<p>Tool ' + tid + ': D' + tool.diameter.toFixed(2) + 'mm - ' + cnt + ' holes</p>';
+        }
+        el.innerHTML = html;
+    }
+}
+</script>
+
+<script>
+// CNCDril Web Application v2.0.0
+
+var VERSION = '2.0.0';
+var PROJECT = 'CNCDril';
+var GITHUB  = 'https://github.com/AntiquityMC/CNCDril';
+
+var currentLanguage = 'en';
+var uiManager = null;
+var currentData = { tools:{}, holes:{}, optimized:{}, gcode:'' };
+
+// ---- bootstrap ----
+document.addEventListener('DOMContentLoaded', init);
+
+function init() {
+    // detect browser lang
+    var bl = (navigator.language || 'en').slice(0,2);
+    if (translations[bl]) currentLanguage = bl;
+
+    // saved preference
+    try { var saved = localStorage.getItem('cncdril_lang'); if (saved && translations[saved]) currentLanguage = saved; } catch(e){}
+
+    document.getElementById('language_selector').value = currentLanguage;
+    applyLanguage(currentLanguage);
+
+    uiManager = new UIManager();
+    wireEvents();
+}
+
+// ---- translation ----
+function applyLanguage(lang) {
+    var map = {
+        'app_title':'app_title',
+        'file_section_title':'file_section_title',
+        'drop_zone_label':'drop_zone_label',
+        'optimization_title':'optimization_title',
+        'algorithm_label':'algorithm_label',
+        'parameters_title':'parameters_title',
+        'safe_z_label':'safe_z_label',
+        'drill_z_label':'drill_z_label',
+        'feed_rate_label':'feed_rate_label',
+        'tools_title':'tools_title',
+        'generate_btn':'generate_button',
+        'download_btn':'download_button',
+        'gcode_preview_title':'gcode_preview_title',
+        'preview_title':'preview_title',
+        'show_paths_label':'show_paths_label',
+        'edit_mode_label':'edit_mode_label',
+        'no_file_message':'no_file_message'
+    };
+    for (var id in map) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = t(map[id], lang);
+    }
+    var sel = document.getElementById('optimize_algorithm');
+    if (sel) {
+        sel.options[0].text = t('algorithm_none', lang);
+        sel.options[1].text = t('algorithm_x', lang);
+        sel.options[2].text = t('algorithm_y', lang);
+        sel.options[3].text = t('algorithm_path', lang);
+    }
+}
+
+// ---- events ----
+function wireEvents() {
+    // language
+    on('language_selector','change', function(e){ setLang(e.target.value); });
+
+    // file input
+    var fi = document.getElementById('file_input');
+    if (fi) fi.addEventListener('change', function(e){ if(e.target.files[0]) loadFile(e.target.files[0]); });
+
+    // drag-drop
+    var dz = document.getElementById('file_drop_zone');
+    if (dz) {
+        dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('drag-over'); });
+        dz.addEventListener('dragleave', function(){ dz.classList.remove('drag-over'); });
+        dz.addEventListener('drop', function(e){ e.preventDefault(); dz.classList.remove('drag-over'); if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+    }
+
+    on('clear_file','click', clearFile);
+    on('optimize_algorithm','change', function(){ if(Object.keys(currentData.holes).length) optimizeAndDraw(); });
+    on('generate_btn','click', generateGCode);
+    on('download_btn','click', downloadGCode);
+    on('zoom_in','click', function(){ if(uiManager) uiManager.zoomIn(); });
+    on('zoom_out','click', function(){ if(uiManager) uiManager.zoomOut(); });
+    on('reset_view','click', function(){ if(uiManager) uiManager.resetView(); });
+    on('show_paths','change', function(){ if(uiManager) uiManager.draw(); });
+
+    // help
+    on('help_btn','click', showAbout);
+    on('about_close','click', function(){ document.getElementById('about_dialog').style.display='none'; });
+    window.addEventListener('click', function(e){ var m=document.getElementById('about_dialog'); if(e.target===m) m.style.display='none'; });
+    document.addEventListener('keydown', function(e){ if(e.key==='F1'){e.preventDefault(); showAbout();} });
+
+    // footer
+    on('footer_github','click', function(e){ e.preventDefault(); window.open(GITHUB,'_blank'); });
+    on('footer_docs','click', function(e){ e.preventDefault(); window.open(GITHUB+'#readme','_blank'); });
+}
+
+function on(id, evt, fn) { var el=document.getElementById(id); if(el) el.addEventListener(evt, fn); }
+
+// ---- language ----
+function setLang(lang) {
+    currentLanguage = lang;
+    applyLanguage(lang);
+    try { localStorage.setItem('cncdril_lang', lang); } catch(e){}
+}
+
+// ---- file handling ----
+function loadFile(file) {
+    if (!file.name.toLowerCase().endsWith('.drl')) {
+        alert(t('error_invalid_file', currentLanguage));
+        return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) { parseContent(e.target.result, file.name); };
+    reader.readAsText(file);
+}
+
+function parseContent(text, filename) {
+    try {
+        var parser = new DRLParser();
+        var result = parser.parseDRL(text);
+        currentData.tools = result.tools;
+        currentData.holes = result.holes;
+
+        document.getElementById('file_info').style.display = 'flex';
+        document.getElementById('file_name').textContent = filename;
+        document.getElementById('drop_zone_text').style.display = 'none';
+
+        if (uiManager) uiManager.updateToolsInfo(currentData.tools, currentData.holes);
+        optimizeAndDraw();
+
+        var st = document.getElementById('canvas_status');
+        if (st) st.textContent = formatTemplate(t('canvas_status_loaded', currentLanguage), {file:filename});
+    } catch(err) {
+        alert(t('error_parse_failed', currentLanguage) + '\n' + err.message);
+    }
+}
+
+function optimizeAndDraw() {
+    var algo = document.getElementById('optimize_algorithm').value;
+    currentData.optimized = {};
+    for (var tid in currentData.holes) {
+        currentData.optimized[tid] = OptimizationAlgorithms.optimize(currentData.holes[tid], algo);
+    }
+    if (uiManager) uiManager.setData(currentData.tools, currentData.holes, currentData.optimized);
+}
+
+function clearFile() {
+    currentData = { tools:{}, holes:{}, optimized:{}, gcode:'' };
+    document.getElementById('file_input').value = '';
+    document.getElementById('file_info').style.display = 'none';
+    document.getElementById('drop_zone_text').style.display = 'block';
+    document.getElementById('tools_info').innerHTML = '<p id="no_file_message">' + t('no_file_message', currentLanguage) + '</p>';
+    document.getElementById('gcode_preview').value = '';
+    document.getElementById('download_btn').disabled = true;
+    if (uiManager) uiManager.setData(null, null, null);
+}
+
+// ---- gcode ----
+function generateGCode() {
+    if (!Object.keys(currentData.holes).length) { alert(t('error_no_file', currentLanguage)); return; }
+
+    var params = {
+        safeZ:     parseFloat(document.getElementById('safe_z').value),
+        drillZ:    parseFloat(document.getElementById('drill_z').value),
+        feedRate:   parseFloat(document.getElementById('feed_rate').value),
+        plungeRate: parseFloat(document.getElementById('feed_rate').value) / 2,
+        toolChangeX: 0, toolChangeY: 0
+    };
+
+    var gen = new GCodeGenerator(params);
+    var body = gen.generate(currentData.tools, currentData.holes, currentData.optimized);
+
+    // prepend header with version
+    currentData.gcode = '% ' + PROJECT + ' G-Code Output\n% Version ' + VERSION + '\n% GitHub: ' + GITHUB + '\n' + body;
+
+    document.getElementById('gcode_preview').value = currentData.gcode;
+    document.getElementById('download_btn').disabled = false;
+
+    var total = 0;
+    for (var tid in currentData.holes) total += currentData.holes[tid].length;
+    var st = document.getElementById('canvas_status');
+    if (st) st.textContent = formatTemplate(t('canvas_status_done', currentLanguage), {holes:total});
+    alert(formatTemplate(t('success_generated', currentLanguage), {holes:total}));
+}
+
+function downloadGCode() {
+    if (!currentData.gcode) return;
+    var blob = new Blob([currentData.gcode], {type:'text/plain'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = PROJECT + '_v' + VERSION + '_output.nc';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+// ---- about dialog ----
+function showAbout() {
+    var m = document.getElementById('about_dialog');
+    document.getElementById('about_title').textContent = t('about_title', currentLanguage);
+    document.getElementById('about_text').innerHTML =
+        '<h3>' + PROJECT + ' v' + VERSION + '</h3>' +
+        '<p>CNC Drill File Optimizer</p>' +
+        '<p>Converts P-CAD / Altium .drl files to optimized G-Code.</p>' +
+        '<h3>Features</h3><ul>' +
+        '<li>SortByX, SortByY, SortByPath (OPTICS)</li>' +
+        '<li>6 languages: EN, RU, UK, PT, DE, FR</li>' +
+        '<li>Interactive visualization</li>' +
+        '<li>Drag-and-drop file upload</li></ul>' +
+        '<h3>How to use</h3><ol>' +
+        '<li>Drop a .drl file or click to browse</li>' +
+        '<li>Select optimization algorithm</li>' +
+        '<li>Click Generate G-Code</li>' +
+        '<li>Download the result</li></ol>' +
+        '<p><strong>License:</strong> ' + 'MIT</p>';
+
+    var dl = document.getElementById('docs_link');
+    var gl = document.getElementById('github_link');
+    dl.href = GITHUB + '#readme'; dl.textContent = '📚 ' + t('docs_link_text', currentLanguage); dl.target='_blank';
+    gl.href = GITHUB;             gl.textContent = '🔗 ' + t('github_link_text', currentLanguage); gl.target='_blank';
+    m.style.display = 'block';
+}
+</script>
+</body>
+</html>

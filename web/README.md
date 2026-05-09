@@ -251,18 +251,43 @@ The application supports 6 languages with complete translations:
 - Help dialog content
 - Tooltips
 
-## Testing
+ ### Standalone HTML Version
 
-### Manual Testing Checklist
-- [x] All 6 languages work correctly
-- [x] Help dialog opens with F1
-- [x] GitHub links work
-- [x] Version displayed correctly
-- [x] G-Code contains metadata
-- [x] File upload works
-- [x] All optimization algorithms produce valid output
-- [x] Canvas visualization works
-- [x] Download functionality works
+ A standalone HTML version is available at `standalone/cncdril.html`. It combines all JavaScript modules into a single self-contained HTML file that can be opened directly in any browser without a web server.
+
+ ### Automated Tests
+
+ The web modules include automated tests covering the parser and optimizer:
+
+ ```bash
+ node web/test/test.mjs
+ ```
+
+ **Test coverage:** 10 tests covering DRL file parsing, coordinate extraction, tool definitions, and all optimization algorithms.
+
+ ## Testing
+
+ ### Automated Tests
+
+ ```bash
+ node web/test/test.mjs
+ ```
+
+ **10 tests** covering:
+ - DRL file parsing (coordinates, tools, units)
+ - Optimization algorithms (SortByX, SortByY, SortByPath)
+ - Edge cases (empty input, single tool, multiple tools)
+
+ ### Manual Testing Checklist
+ - [x] All 6 languages work correctly
+ - [x] Help dialog opens with F1
+ - [x] GitHub links work
+ - [x] Version displayed correctly
+ - [x] G-Code contains metadata
+ - [x] File upload works
+ - [x] All optimization algorithms produce valid output
+ - [x] Canvas visualization works
+ - [x] Download functionality works
 
 ## Future Enhancements
 

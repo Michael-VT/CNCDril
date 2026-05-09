@@ -4,6 +4,8 @@ CNC drill file optimizer — Node.js CLI variant. Zero dependencies.
 
 Converts P-CAD/Altium `.drl` files to optimized G-Code for CNC machines.
 
+ A standalone HTML version is also available at `standalone/cncdril.html` -- a single self-contained file that runs in any browser without a server or Node.js.
+
 ## Quick Start
 
 ```bash
@@ -84,13 +86,26 @@ M30
 
 ## Comparison with other versions
 
-| Feature | Python CLI | Node.js CLI | Web |
-|---------|-----------|-------------|-----|
-| Install needed | pip install | node.js only | Browser |
-| Dependencies | matplotlib, numpy | None | None |
-| Languages | 6 | 6 | 6 |
-| File I/O | Native | Native | Browser API |
-| CI/CD friendly | Yes | Yes | No |
+| Feature | Python CLI | Node.js CLI | Web | Standalone HTML |
+|---------|-----------|-------------|-----|-----------------|
+| Install needed | pip install | node.js only | Browser | None |
+| Dependencies | matplotlib, numpy | None | None | None |
+| Languages | 6 | 6 | 6 | 6 |
+| File I/O | Native | Native | Browser API | Browser API |
+| CI/CD friendly | Yes | Yes | No | No |
+
+## Testing
+
+```bash
+node nodejs/test/test.mjs
+```
+
+**13 tests** covering:
+- DRL file parsing (coordinates, tools, units)
+- G-Code generation
+- Optimization algorithms (SortByX, SortByY, SortByPath)
+- CLI argument handling
+- Edge cases (empty input, single tool, multiple tools)
 
 ## License
 
